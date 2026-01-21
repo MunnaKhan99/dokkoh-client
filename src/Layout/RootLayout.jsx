@@ -6,7 +6,6 @@ import auth from "../firebase.config";
 export const dokkhoContext = createContext();
 
 const RootLayout = () => {
-    // 🔐 Firebase user
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -17,6 +16,7 @@ const RootLayout = () => {
 
     // 🧩 Provider onboarding data
     const [providerData, setProviderData] = useState({
+        name:"",
         service: "",
         location: "",
         areaOnly: false,

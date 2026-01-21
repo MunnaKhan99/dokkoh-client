@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router';
 import { FiSearch } from 'react-icons/fi'; // সার্চ আইকন
 import { HiOutlineBriefcase } from 'react-icons/hi'; // ব্রিফকেস আইকন
+import { dokkhoContext } from '../../Layout/RootLayout';
 
 const RoleSelect = () => {
     const navigate = useNavigate();
+    const { user } = useContext(dokkhoContext)
+    console.log(user);
 
     const handleRoleSelection = (role) => {
         console.log("Selected Role:", role);
         // এখানে আপনার পরবর্তী পাথে পাঠিয়ে দিতে পারেন
-        // navigate('/dokkho/dashboard'); 
+        navigate(`/dokkho/${role}/dashboard`);
     };
 
     return (
