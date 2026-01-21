@@ -10,10 +10,12 @@ import {
 import { dokkhoContext } from "../../Layout/RootLayout";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const ProviderOnboarding = () => {
     const { providerData, setProviderData, user } = useContext(dokkhoContext);
     const [step, setStep] = useState(1);
+    const navigate = useNavigate()
 
     /* ---------- Step Navigation ---------- */
     const nextStep = () => setStep((prev) => prev + 1);
@@ -90,6 +92,9 @@ const ProviderOnboarding = () => {
                     text: "আপনার প্রোভাইডার প্রোফাইল আগেই তৈরি করা আছে",
                     confirmButtonText: "ঠিক আছে",
                 });
+                setTimeout(() => {
+                    navigate("/dokkho/provider/dashboard");
+                }, 1500);
             }
             else if (res.data?.success && res.data?.providerId) {
                 Swal.fire({
@@ -97,10 +102,13 @@ const ProviderOnboarding = () => {
                     title: "সফলভাবে সম্পন্ন হয়েছে",
                     text: "আপনার প্রোভাইডার প্রোফাইল তৈরি হয়েছে",
                     confirmButtonText: "ড্যাশবোর্ডে যান",
+
+
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // এখানে future dashboard route দিবে
-                        // navigate("/dokkho/provider/dashboard");
+                        setTimeout(() => {
+                            navigate("/dokkho/provider/dashboard");
+                        }, 1500);
                     }
                 });
             }

@@ -12,7 +12,7 @@ const RoleSelect = () => {
     const handleRoleSelection = (role) => {
         console.log("Selected Role:", role);
         // এখানে আপনার পরবর্তী পাথে পাঠিয়ে দিতে পারেন
-        navigate(`/dokkho/${role}/dashboard`);
+        navigate(`/dokkho/${role}/onboarding`);
     };
 
     return (
