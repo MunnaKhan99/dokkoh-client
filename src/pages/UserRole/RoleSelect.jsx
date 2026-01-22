@@ -6,53 +6,22 @@ import { dokkhoContext } from "../../Layout/RootLayout";
 
 const RoleSelect = () => {
     const navigate = useNavigate();
+    const { providerExists, checkingProvider, setRole } =
+        useContext(dokkhoContext);
 
-    const {
-        user,
-        providerExists,
-        checkingProvider
-    } = useContext(dokkhoContext);
+    if (checkingProvider) return <div>চেক করা হচ্ছে...</div>;
 
-    // 🔹 auto redirect if already provider
-    useEffect(() => {
-        if (!checkingProvider && providerExists) {
-            navigate("/dokkho/provider/dashboard", { replace: true });
-        }
-    }, [checkingProvider, providerExists, navigate]);
+    const choose = (r) => {
+        setRole(r);
 
-    // 🔹 loading state (central)
-    if (checkingProvider) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>চেক করা হচ্ছে...</p>
-            </div>
-        );
-    }
-
-    // 🔹 role click handler
-    const handleRoleSelection = (role) => {
-        if (!user) {
-            navigate("/dokkho/login");
-            return;
-        }
-
-        if (role === "সেবা নেই") {
-            console.log(role);
+        if (r === "customer") {
             navigate("/dokkho/customer/dashboard");
-            return;
-        }
-
-        if (role === "সেবা দেই") {
-            console.log(role);
-            console.log(providerExists);
-            if (providerExists) {
-                navigate("/dokkho/provider/dashboard");
-            } else {
-                navigate("/dokkho/provider/onboarding");
-            }
+        } else {
+            providerExists
+                ? navigate("/dokkho/provider/dashboard")
+                : navigate("/dokkho/provider/onboarding");
         }
     };
-
     return (
         <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#F9FAFB] px-6">
             <div className="w-full max-w-2xl text-center">
@@ -68,7 +37,7 @@ const RoleSelect = () => {
 
                     {/* Customer */}
                     <div
-                        onClick={() => handleRoleSelection("সেবা নেই")}
+                        onClick={() => choose("customer")}
                         className="group cursor-pointer rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all hover:border-[#0FA958] hover:shadow-md active:scale-[0.98]"
                     >
                         <div className="flex flex-col items-center">
@@ -86,7 +55,7 @@ const RoleSelect = () => {
 
                     {/* Provider */}
                     <div
-                        onClick={() => handleRoleSelection("সেবা দেই")}
+                        onClick={() => choose("provider")}
                         className="group cursor-pointer rounded-2xl border border-gray-100 bg-white p-8 shadow-sm transition-all hover:border-[#FBBF24] hover:shadow-md active:scale-[0.98]"
                     >
                         <div className="flex flex-col items-center">

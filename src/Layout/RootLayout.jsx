@@ -3,62 +3,68 @@ import { Outlet, useNavigate } from "react-router";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../firebase.config";
 import axios from "axios";
-import Swal from "sweetalert2";
 
 export const dokkhoContext = createContext();
 
 const RootLayout = () => {
     const navigate = useNavigate();
 
-    /* ---------------- Auth ---------------- */
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    /* ---------------- Role ---------------- */
     const [role, setRole] = useState(
         () => localStorage.getItem("dokkho_role") || null
     );
 
-    /* ---------------- Provider Core State ---------------- */
     const [provider, setProvider] = useState(null);
-    const [providerLoading, setProviderLoading] = useState(true);
+    const [checkingProvider, setCheckingProvider] = useState(true);
 
     const providerExists = !!provider;
 
-    /* ---------------- Provider Onboarding Draft ---------------- */
     const [providerData, setProviderData] = useState({
         name: "",
         service: "",
         location: "",
         areaOnly: false,
-        contact: {
-            phone: true,
-            whatsapp: true,
-        },
+        contact: { phone: true, whatsapp: true },
     });
 
-    /* ---------------- Firebase Auth Observer ---------------- */
+    // OTP verify = customer
+    const ensureCustomerRole = async (firebaseUser) => {
+        if (!firebaseUser?.uid) return;
+        await axios.patch(
+            `http://localhost:3000/users/${firebaseUser.uid}/customer-role`,
+            {
+                phoneNumber: firebaseUser.phoneNumber,
+            }
+        );
+    };
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsub = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
             setLoading(false);
-        });
 
-        return () => unsubscribe();
+            if (currentUser) {
+                await ensureCustomerRole(currentUser);
+            } else {
+                setProvider(null);
+                setCheckingProvider(false);
+            }
+        });
+        return () => unsub();
     }, []);
 
-    /* ---------------- Persist Role ---------------- */
     useEffect(() => {
-        if (role) {
-            localStorage.setItem("dokkho_role", role);
-        }
+        if (role) localStorage.setItem("dokkho_role", role);
     }, [role]);
 
-    /* ---------------- Fetch Provider (SINGLE SOURCE) ---------------- */
     const fetchProvider = async () => {
+        setCheckingProvider(true);
+
         if (!user?.uid) {
             setProvider(null);
-            setProviderLoading(false);
+            setCheckingProvider(false);
             return;
         }
 
@@ -66,38 +72,30 @@ const RootLayout = () => {
             const res = await axios.get(
                 `http://localhost:3000/providers/by-uid/${user.uid}`
             );
-            setProvider(res.data);
-        } catch (error) {
-            if (error.response?.status === 404) {
-                setProvider(null);
+
+            if (res.data.exists) {
+                setProvider(res.data.provider);
             } else {
-                console.error("Fetch provider failed", error);
+                setProvider(null);
             }
+        } catch (error) {
+            console.error("Unexpected provider fetch error", error);
+            setProvider(null);
         } finally {
-            setProviderLoading(false);
+            setCheckingProvider(false);
         }
     };
 
+
     useEffect(() => {
-        setProviderLoading(true);
         fetchProvider();
     }, [user]);
 
-    /* ---------------- Provider Onboarding Submit ---------------- */
     const submitProviderOnboarding = async () => {
-        if (!user) {
-            Swal.fire({
-                icon: "error",
-                title: "লগইন নেই",
-                text: "অনুগ্রহ করে আগে লগইন করুন",
-            });
-            return { success: false };
-        }
-
-        try {
-            const token = await user.getIdToken();
-
-            const payload = {
+        const token = await user.getIdToken();
+        const res = await axios.post(
+            "http://localhost:3000/providers",
+            {
                 user: {
                     uid: user.uid,
                     phoneNumber: user.phoneNumber,
@@ -105,121 +103,51 @@ const RootLayout = () => {
                     reloadUserInfo: user.reloadUserInfo,
                 },
                 providerData,
-            };
-
-            const res = await axios.post(
-                "http://localhost:3000/providers",
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            // refresh provider globally
-            await fetchProvider();
-
-            return res.data;
-        } catch (error) {
-            console.error("Provider setup failed:", error);
-
-            Swal.fire({
-                icon: "error",
-                title: "সার্ভার সমস্যা",
-                text: "সেটআপ সম্পন্ন করা যায়নি, আবার চেষ্টা করুন",
-            });
-
-            return { success: false };
-        }
-    };
-
-    /* ---------------- Availability Toggle ---------------- */
-    const toggleProviderAvailability = async () => {
-        if (!provider?._id) return;
-
-        try {
-            const updated = !provider.availability;
-
-            await axios.patch(
-                `http://localhost:3000/providers/${provider._id}/availability`,
-                { availability: updated }
-            );
-
-            setProvider({
-                ...provider,
-                availability: updated,
-            });
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "আপডেট ব্যর্থ",
-                text: "অ্যাভেইলেবিলিটি পরিবর্তন করা যায়নি",
-            });
-        }
-    };
-
-    /* ---------------- Logout ---------------- */
-    const logout = async () => {
-        try {
-            await signOut(auth);
-            await axios.post("http://localhost:3000/logout");
-
-            setUser(null);
-            setProvider(null);
-
-            Swal.fire({
-                icon: "success",
-                title: "লগআউট সফল",
-                timer: 1200,
-                showConfirmButton: false,
-            });
-
-            navigate("/dokkho/login", { replace: true });
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "লগআউট ব্যর্থ",
-                text: error.message,
-            });
-        }
-    };
-
-    /* ---------------- Context ---------------- */
-    const contextValue = {
-        user,
-        setUser,
-
-        role,
-        setRole,
-
-        loading,
-        setLoading,
-
-        provider,
-        providerExists,
-        providerLoading,
-
-        providerData,
-        setProviderData,
-
-        fetchProvider,
-        submitProviderOnboarding,
-        toggleProviderAvailability,
-
-        logout,
-    };
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>Loading...</p>
-            </div>
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
         );
-    }
+        await fetchProvider();
+        return res.data;
+    };
+
+    const toggleProviderAvailability = async () => {
+        const updated = !provider.availability;
+        await axios.patch(
+            `http://localhost:3000/providers/${provider._id}/availability`,
+            { availability: updated }
+        );
+        setProvider({ ...provider, availability: updated });
+    };
+
+    const logout = async () => {
+        await signOut(auth);
+        await axios.post("http://localhost:3000/logout");
+        setUser(null);
+        setProvider(null);
+        navigate("/dokkho/login", { replace: true });
+    };
+
+    if (loading) return <div>Loading...</div>;
 
     return (
-        <dokkhoContext.Provider value={contextValue}>
+        <dokkhoContext.Provider
+            value={{
+                user,
+                setUser,
+                loading,
+                setLoading,
+                role,
+                setRole,
+                provider,
+                providerExists,
+                checkingProvider,
+                providerData,
+                setProviderData,
+                submitProviderOnboarding,
+                toggleProviderAvailability,
+                logout,
+            }}
+        >
             <Outlet />
         </dokkhoContext.Provider>
     );
