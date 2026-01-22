@@ -41,13 +41,13 @@ const VerifyOtp = () => {
                 return;
             }
 
-            // ✅ Verify OTP with Firebase
+
             const result = await window.confirmationResult.confirm(finalOtp);
 
-            // ✅ Firebase user created & logged in
+
             setUser(result.user);
 
-            // ✅ Go to role selection
+
             navigate("/dokkho/role");
         } catch (error) {
             console.error("OTP Verify Error:", error);

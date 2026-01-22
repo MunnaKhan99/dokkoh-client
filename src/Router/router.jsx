@@ -6,6 +6,8 @@ import VerifyOtp from "../pages/VerifyOtp/VerifyOtp";
 import RoleSelect from "../pages/UserRole/RoleSelect";
 import ProviderOnboarding from "../pages/ProviderOnBoarding/ProviderOnboarding";
 import ProviderDashboard from "../pages/ProviderDashboard/ProviderDashboard ";
+import ProviderProfile from "../pages/ProviderProfile/ProviderProfile";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -15,10 +17,11 @@ const router = createBrowserRouter([
 
             { path: "/dokkho/login", element: <PhoneLogin /> },
             { path: "/dokkho/verify-otp", element: <VerifyOtp /> },
-            { path: "/dokkho/role", element: <RoleSelect /> },
+            { path: "/dokkho/role", element: <PrivateRoute><RoleSelect /></PrivateRoute> },
 
-            { path: "/dokkho/provider/onboarding", element: <ProviderOnboarding /> },
-            { path: "/dokkho/provider/dashboard", element: <ProviderDashboard /> },
+            { path: "/dokkho/provider/onboarding", element: <PrivateRoute><ProviderOnboarding /></PrivateRoute> },
+            { path: "/dokkho/provider/dashboard", element: <PrivateRoute><ProviderDashboard /></PrivateRoute> },
+            { path: "/dokkho/provider/profile", element: <PrivateRoute><ProviderProfile /></PrivateRoute> }
         ],
     },
 ]);

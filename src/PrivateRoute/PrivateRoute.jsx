@@ -1,23 +1,24 @@
-import React, { useContext } from 'react';
-import { authContext } from '../Layout/RootLayout';
-import { Navigate, useLocation } from 'react-router';
+import { useContext } from "react";
+import { dokkhoContext } from "../Layout/RootLayout";
+import { Navigate } from "react-router";
 
 const PrivateRoute = ({ children }) => {
-    const { user, loading } = useContext(authContext);
-    const { pathname } = useLocation();
-    console.log(pathname);
-    console.log(user);
+    const { user, loading } = useContext(dokkhoContext);
+
+    // Firebase auth resolve হওয়া পর্যন্ত অপেক্ষা
     if (loading) {
-        return <div>Loading...</div>
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p>লোড হচ্ছে...</p>
+            </div>
+        );
     }
+
     if (!user) {
-        return <Navigate state={{ form: location.pathname }} to='/signin'></Navigate >
+        return <Navigate to="/dokkho/login" replace />;
     }
-    return (
-        <div>
-            {children}
-        </div>
-    );
+
+    return children;
 };
 
 export default PrivateRoute;

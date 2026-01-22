@@ -8,12 +8,11 @@ import {
     FaWhatsapp,
 } from "react-icons/fa";
 import { dokkhoContext } from "../../Layout/RootLayout";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
 const ProviderOnboarding = () => {
-    const { providerData, setProviderData, user } = useContext(dokkhoContext);
+    const { providerData, setProviderData, submitProviderOnboarding } = useContext(dokkhoContext);
     const [step, setStep] = useState(1);
     const navigate = useNavigate()
 
@@ -23,14 +22,14 @@ const ProviderOnboarding = () => {
 
     /* ---------- STEP 1: Service ---------- */
     const services = [
-        { id: "electrician", label: "ইলেকট্রিশিয়ান", icon: <FaBolt /> },
-        { id: "plumber", label: "প্লাম্বার", icon: <FaTools /> },
-        { id: "tutor", label: "হোম টিউটর", icon: <FaBook /> },
-        { id: "other", label: "অন্যান্য", icon: <FaBriefcase /> },
+        { id: "ইলেকট্রিশিয়ান", label: "ইলেকট্রিশিয়ান", icon: <FaBolt /> },
+        { id: "প্লাম্বার", label: "প্লাম্বার", icon: <FaTools /> },
+        { id: "হোম টিউটর", label: "হোম টিউটর", icon: <FaBook /> },
+        { id: "অন্যান্য", label: "অন্যান্য", icon: <FaBriefcase /> },
     ];
 
     /* ---------- STEP 2: Location ---------- */
-    const areas = ["Dhanmondi", "Mirpur", "Uttara", "Mohammadpur"];
+    const areas = ["ধানমন্ডি", "মিরপুর", "উত্তরা", "মোহাম্মদপুর"];
 
     /* ---------- STEP 3: Contact ---------- */
     const toggleContact = (type) => {
@@ -45,91 +44,30 @@ const ProviderOnboarding = () => {
 
     /* ---------- Submit ---------- */
     const handleComplete = async () => {
-        try {
-            if (!user) {
-                Swal.fire({
-                    icon: "error",
-                    title: "লগইন নেই",
-                    text: "অনুগ্রহ করে আগে লগইন করুন",
-                });
-                return;
-            }
+        const result = await submitProviderOnboarding();
 
-            const token = await user.getIdToken();
+        if (!result?.success) return;
 
-            const payload = {
-                user: {
-                    uid: user.uid,
-                    phoneNumber: user.phoneNumber,
-                    metadata: user.metadata,
-                    reloadUserInfo: user.reloadUserInfo,
-                },
-                providerData: {
-                    name: providerData.name,
-                    service: providerData.service,
-                    location: providerData.location,
-                    areaOnly: providerData.areaOnly,
-                    contact: providerData.contact,
-                },
-            };
-
-            const res = await axios.post(
-                "http://localhost:3000/providers",
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            /* ---------------- SweetAlert Logic ---------------- */
-
-            if (res.data?.success && res.data?.message === "Provider already exists") {
-                Swal.fire({
-                    icon: "info",
-                    title: "আপনি ইতিমধ্যে রেজিস্টার্ড",
-                    text: "আপনার প্রোভাইডার প্রোফাইল আগেই তৈরি করা আছে",
-                    confirmButtonText: "ঠিক আছে",
-                });
-                setTimeout(() => {
-                    navigate("/dokkho/provider/dashboard");
-                }, 1500);
-            }
-            else if (res.data?.success && res.data?.providerId) {
-                Swal.fire({
-                    icon: "success",
-                    title: "সফলভাবে সম্পন্ন হয়েছে",
-                    text: "আপনার প্রোভাইডার প্রোফাইল তৈরি হয়েছে",
-                    confirmButtonText: "ড্যাশবোর্ডে যান",
-
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        setTimeout(() => {
-                            navigate("/dokkho/provider/dashboard");
-                        }, 1500);
-                    }
-                });
-            }
-            else {
-                Swal.fire({
-                    icon: "warning",
-                    title: "অপ্রত্যাশিত উত্তর",
-                    text: "কিছু একটা সমস্যা হয়েছে",
-                });
-            }
-
-        } catch (error) {
-            console.error("Provider setup failed:", error);
-
+        if (result.message === "Provider already exists") {
             Swal.fire({
-                icon: "error",
-                title: "সার্ভার সমস্যা",
-                text: "সেটআপ সম্পন্ন করা যায়নি, আবার চেষ্টা করুন",
+                icon: "info",
+                title: "আপনি ইতিমধ্যে রেজিস্টার্ড",
+                text: "আপনার প্রোভাইডার প্রোফাইল আগেই তৈরি করা আছে",
             });
+
+            navigate("/dokkho/provider/dashboard");
+        }
+        else if (result.providerId) {
+            Swal.fire({
+                icon: "success",
+                title: "সফলভাবে সম্পন্ন হয়েছে",
+                text: "আপনার প্রোভাইডার প্রোফাইল তৈরি হয়েছে",
+            });
+
+            navigate("/dokkho/provider/dashboard");
         }
     };
+
 
 
     return (
@@ -226,7 +164,7 @@ const ProviderOnboarding = () => {
                                 })
                             }
                         >
-                            <option value="">Select area</option>
+                            <option value="">এরিয়া নির্বাচন করুন</option>
                             {areas.map((area) => (
                                 <option key={area}>{area}</option>
                             ))}
