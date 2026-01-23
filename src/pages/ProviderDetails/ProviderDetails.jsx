@@ -26,6 +26,12 @@ const ProviderDetails = () => {
             .catch(() => setLoading(false));
     }, [providerId]);
 
+    const formatWhatsAppNumber = (number) => {
+        if (!number) return "";
+        return number.replace(/\D/g, ""); // removes EVERYTHING except digits
+    };
+
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center text-gray-500">
@@ -142,7 +148,7 @@ const ProviderDetails = () => {
 
                 {/* WhatsApp */}
                 <a
-                    href={`https://wa.me/${phoneNumber.replace("+", "")}`}
+                    href={`https://wa.me/${formatWhatsAppNumber(phoneNumber)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="flex-1 bg-green-500 text-white py-3 rounded-xl flex items-center justify-center gap-2 font-medium"

@@ -5,18 +5,21 @@ import { FaArrowLeft, FaStar, FaPhoneAlt } from "react-icons/fa";
 
 const ServiceList = () => {
     const { serviceKey } = useParams();
+    console.log(serviceKey);
     const navigate = useNavigate();
-    const {
-        providers,
-        providersLoading,
-        fetchProviders,
-    } = useContext(dokkhoContext);
-
+    const { providers, providersLoading, fetchProviders, customerParentArea } =
+        useContext(dokkhoContext);
+    console.log(providers);
+    console.log(customerParentArea);
     useEffect(() => {
-        fetchProviders({ serviceKey });
-    }, [serviceKey]);
+        fetchProviders({
+            serviceKey,
+            locationParent: customerParentArea, // 👈 key line
+        });
+    }, [serviceKey, customerParentArea]);
 
-    const goToUserDetails = ( id ) => {
+
+    const goToUserDetails = (id) => {
         navigate(`/dokkho/provider/${id}`);
     }
     return (
@@ -28,10 +31,18 @@ const ServiceList = () => {
                 </button>
 
                 <h1 className="text-xl font-bold mt-2">
-                    {
-                        providers.map(provider => (<p key={provider._id}>আপনার কাছাকাছি {provider.serviceName}</p>))
-                    }
+                    {serviceKey === "electrician"
+                        ? "আপনার কাছাকাছি ইলেক্ট্রিশিয়ান"
+                        : serviceKey === "tutor"
+                            ? "আপনার কাছাকাছি টিউটর"
+                            : serviceKey === "plumber"
+                                ? "আপনার কাছাকাছি প্লাম্বার"
+                                : serviceKey === "others"
+                                    ? "আপনার কাছাকাছি অন্যান্য প্রোভাইডার"
+                                    : ""}
                 </h1>
+
+
 
                 <p className="text-sm opacity-90">
                     মোট {providers.length} জন প্রোভাইডার পাওয়া গেছে
@@ -72,9 +83,15 @@ const ServiceList = () => {
                                     </span>
                                 </div>
 
-                                <p className="text-sm text-gray-400">
-                                    এলাকা: {provider.location || "উল্লেখ নেই"}
-                                </p>
+                                {
+                                    provider.locationSub ?
+                                        <p className="text-sm text-gray-400">
+                                            এলাকা: {provider.locationSub || "উল্লেখ নেই"}
+                                        </p> :
+                                        <p className="text-sm text-gray-400">
+                                            এলাকা: {provider.locationParent || "উল্লেখ নেই"}
+                                        </p>
+                                }
                             </div>
 
                             <a
@@ -87,7 +104,7 @@ const ServiceList = () => {
                         </div>
                     ))}
             </div>
-        </div>
+        </div >
     );
 };
 

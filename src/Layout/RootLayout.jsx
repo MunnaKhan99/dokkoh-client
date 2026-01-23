@@ -25,12 +25,23 @@ const RootLayout = () => {
         name: "",
         service: "",
         experience: "",
-        location: "",
+        locationParent: "",   // 👈 parent area (mirpur)
+        locationSub: "",// 👈 detected area (pallabi)
         areaOnly: false,
         contact: { phone: true, whatsapp: true },
     });
     const [providers, setProviders] = useState([]);
     const [providersLoading, setProvidersLoading] = useState(false);
+    const [customerParentArea, setCustomerParentArea] = useState(() => {
+        return localStorage.getItem("customerParentArea");
+    });
+    useEffect(() => {
+    if (customerParentArea) {
+        localStorage.setItem("customerParentArea", customerParentArea);
+    } else {
+        localStorage.removeItem("customerParentArea");
+    }
+}, [customerParentArea]);
 
 
     // OTP verify = customer
@@ -62,25 +73,26 @@ const RootLayout = () => {
     useEffect(() => {
         if (role) localStorage.setItem("dokkho_role", role);
     }, [role]);
-    
-    const fetchProviders = async ({ serviceKey } = {}) => {
+
+    const fetchProviders = async ({ serviceKey, locationParent } = {}) => {
         setProvidersLoading(true);
 
         try {
             const res = await axios.get("http://localhost:3000/providers", {
                 params: {
                     service: serviceKey || undefined,
+                    locationParent: locationParent || undefined,
                 },
             });
 
             setProviders(res.data || []);
-        } catch (error) {
-            console.error("Failed to fetch providers", error);
-            setProviders([]);
         } finally {
             setProvidersLoading(false);
         }
     };
+
+
+
 
     const fetchProvider = async () => {
         setCheckingProvider(true);
@@ -167,6 +179,8 @@ const RootLayout = () => {
                 fetchProviders,
                 providerExists,
                 checkingProvider,
+                customerParentArea,        // ✅ ADD
+                setCustomerParentArea,
                 providerData,
                 setProviderData,
                 submitProviderOnboarding,

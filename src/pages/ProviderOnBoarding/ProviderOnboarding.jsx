@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
     FaBolt,
     FaTools,
@@ -10,11 +10,17 @@ import {
 import { dokkhoContext } from "../../Layout/RootLayout";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { MdLocationOn } from "react-icons/md";
+import axios from "axios";
 
 const ProviderOnboarding = () => {
     const { providerData, setProviderData, submitProviderOnboarding } = useContext(dokkhoContext);
     const [step, setStep] = useState(1);
+    // const [locationName, setLocationName] = useState("লোকেশন নেওয়া হচ্ছে...");
     const navigate = useNavigate()
+
+    const [areas, setAreas] = useState([]); // লিস্ট রাখার জন্য স্টেট
+    const [isLoading, setIsLoading] = useState(false);
 
     /* ---------- Step Navigation ---------- */
     const nextStep = () => setStep((prev) => prev + 1);
@@ -35,10 +41,114 @@ const ProviderOnboarding = () => {
         { id: "৮–১৫", label: "৮–১৫ বছর" },
     ];
 
+    const PARENT_AREAS = [
+        { key: "mirpur", label: "মিরপুর" },
+        { key: "dhanmondi", label: "ধানমন্ডি" },
+        { key: "uttara", label: "উত্তরা" },
+        { key: "mohammadpur", label: "মোহাম্মদপুর" },
+        { key: "gulshan", label: "গুলশান / বনানী" },
+        { key: "tejgaon", label: "তেজগাঁও" },
+        { key: "badda", label: "বাড্ডা / রামপুরা" },
+        { key: "khilgaon", label: "খিলগাঁও" },
+        { key: "jatrabari", label: "যাত্রাবাড়ী" },
+        { key: "olddhaka", label: "পুরান ঢাকা" },
+        { key: "savar", label: "সাভার" },
+    ];
 
     /* ---------- STEP 2: Location ---------- */
-    const areas = ["ধানমন্ডি", "মিরপুর", "উত্তরা", "মোহাম্মদপুর"];
+    const AREA_PARENT_MAP = {
+        /* ===================== MIRPUR ===================== */
+        "মিরপুর": "mirpur",
+        "মিরপুর ১": "mirpur", "মিরপুর ২": "mirpur", "মিরপুর ৬": "mirpur", "মিরপুর ৭": "mirpur",
+        "মিরপুর ১০": "mirpur", "মিরপুর ১১": "mirpur", "মিরপুর ১১.৫": "mirpur", "মিরপুর ১২": "mirpur",
+        "মিরপুর ১৩": "mirpur", "মিরপুর ১৪": "mirpur",
+        "পল্লবী": "mirpur", "রূপনগর": "mirpur", "কালশী": "mirpur",
+        "কাজীপাড়া": "mirpur", "পশ্চিম কাজীপাড়া": "mirpur", "পূর্ব কাজীপাড়া": "mirpur",
+        "শেওড়াপাড়া": "mirpur", "পশ্চিম শেওড়াপাড়া": "mirpur", "পূর্ব শেওড়াপাড়া": "mirpur",
+        "সেনপাড়া পর্বতা": "mirpur", "মনিপুর": "mirpur", "ইব্রাহিমপুর": "mirpur",
+        "টোলারবাগ": "mirpur", "পাইকপাড়া": "mirpur", "আহমেদ নগর": "mirpur",
+        "মিরপুর ডিওএইচএস": "mirpur", "ডি.ও.এইচ.এস মিরপুর": "mirpur",
+        "দারুস সালাম": "mirpur", "গাবতলী": "mirpur", "মাজার রোড": "mirpur",
 
+        /* ===================== DHANMONDI ===================== */
+        "ধানমন্ডি": "dhanmondi", "ধানমন্ডি আবাসিক এলাকা": "dhanmondi",
+        "জিগাতলা": "dhanmondi", "শংকর": "dhanmondi", "রায়ের বাজার": "dhanmondi",
+        "কলাবাগান": "dhanmondi", "সোবহানবাগ": "dhanmondi", "শুক্রাবাদ": "dhanmondi",
+        "হাজারীবাগ": "dhanmondi", "ট্যানারি মোড়": "dhanmondi",
+        "নিউ মার্কেট": "dhanmondi", "আজিমপুর": "dhanmondi", "লালমাটিয়া": "dhanmondi",
+        "কাটাবন": "dhanmondi", "নীলক্ষেত": "dhanmondi",
+
+        /* ===================== MOHAMMADPUR ===================== */
+        "মোহাম্মদপুর": "mohammadpur", "বসিলা": "mohammadpur", "জহুরি মহল্লা": "mohammadpur",
+        "জাফরাবাদ": "mohammadpur", "নূরজাহান রোড": "mohammadpur", "তাজমহল রোড": "mohammadpur",
+        "চাঁদ উদ্যান": "mohammadpur", "নবোদয় হাউজিং": "mohammadpur", "শেকেরটেক": "mohammadpur",
+        "আদাবর": "mohammadpur", "বায়তুল আমান": "mohammadpur", "আসাদ গেট": "mohammadpur",
+
+        /* ===================== UTTARA ===================== */
+        "উত্তরা": "uttara", "আজমপুর": "uttara", "আব্দুল্লাহপুর": "uttara",
+        "উত্তরা সেক্টর ১": "uttara", "উত্তরা সেক্টর ২": "uttara", "উত্তরা সেক্টর ৩": "uttara",
+        "উত্তরা সেক্টর ৪": "uttara", "উত্তরা সেক্টর ৫": "uttara", "উত্তরা সেক্টর ৬": "uttara",
+        "উত্তরা সেক্টর ৭": "uttara", "উত্তরা সেক্টর ৮": "uttara", "উত্তরা সেক্টর ৯": "uttara",
+        "উত্তরা সেক্টর ১০": "uttara", "উত্তরা সেক্টর ১১": "uttara", "উত্তরা সেক্টর ১২": "uttara",
+        "উত্তরা সেক্টর ১৩": "uttara", "উত্তরা সেক্টর ১৪": "uttara", "উত্তরা সেক্টর ১৫": "uttara",
+        "উত্তরা সেক্টর ১৬": "uttara", "উত্তরা সেক্টর ১৭": "uttara", "উত্তরা সেক্টর ১৮": "uttara",
+        "দিয়াবাড়ি": "uttara", "তুরাগ": "uttara", "কামারপাড়া": "uttara",
+
+        /* ===================== GULSHAN / BANANI / BARIDHARA ===================== */
+        "গুলশান": "gulshan", "গুলশান ১": "gulshan", "গুলশান ২": "gulshan",
+        "বনানী": "gulshan", "বনানী ডিওএইচএস": "gulshan", "কড়াইল": "gulshan",
+        "বারিধারা": "gulshan", "বারিধারা ডিওএইচএস": "gulshan", "বারিধারা জে ব্লক": "gulshan",
+        "নিকেতন": "gulshan", "মহাখালী": "gulshan", "মহাখালী ডিওএইচএস": "gulshan",
+        "নিকুঞ্জ": "gulshan", "নিকুঞ্জ ১": "gulshan", "নিকুঞ্জ ২": "gulshan",
+        "খাপড়া": "gulshan", "কুড়িল": "gulshan", "নর্দা": "gulshan",
+
+        /* ===================== BASHUNDHARA / VATARA ===================== */
+        "বসুন্ধরা": "bashundhara", "বসুন্ধরা আবাসিক এলাকা": "bashundhara",
+        "ভাটারা": "bashundhara", "ছোলমাইদ": "bashundhara", "যমুনা ফিউচার পার্ক": "bashundhara",
+
+        /* ===================== TEJGAON / FARMGATE ===================== */
+        "तेজগাঁও": "tejgaon", "तेজগাঁও শিল্প এলাকা": "tejgaon", "নাকহালপাড়া": "tejgaon",
+        "ফার্মগেট": "tejgaon", "কারওয়ান বাজার": "tejgaon", "রাজাবাজার": "tejgaon",
+        "পশ্চিম রাজাবাজার": "tejgaon", "পূর্ব রাজাবাজার": "tejgaon",
+        "পান্থপথ": "tejgaon", "ইন্দিরা রোড": "tejgaon", "মণিপুরিপাড়া": "tejgaon",
+
+        /* ===================== RAMNA / SHAHBAG ===================== */
+        "রমনা": "ramna", "শাহবাগ": "ramna", "পরীবাগ": "ramna",
+        "বাংলা মোটর": "ramna", "কাকরাইল": "ramna", "সেগুনবাগিচা": "ramna",
+        "শান্তিনগর": "ramna", "মালিবাগ": "ramna", "মালিবাগ মোড়": "ramna",
+        "মগবাজার": "ramna", "বড় মগবাজার": "ramna", "সিদ্ধেশ্বরী": "ramna",
+        "ইস্কাটন": "ramna", "হলুবাজার": "ramna",
+
+        /* ===================== BADDA / RAMPURA ===================== */
+        "বাড্ডা": "badda", "উত্তর বাড্ডা": "badda", "মধ্য বাড্ডা": "badda", "দক্ষিণ বাড্ডা": "badda",
+        "মেরুল বাড্ডা": "badda", "সাতারকুল": "badda",
+        "রামপুরা": "badda", "বনশ্রী": "badda", "পূর্ব রামপুরা": "badda", "টিভি সেন্টার": "badda",
+        "আফতাবনগর": "badda", "উলন": "badda",
+
+        /* ===================== KHILGAON / SABUJBAG ===================== */
+        "খিলগাঁও": "khilgaon", "গোরান": "khilgaon", "দক্ষিণগাঁও": "khilgaon",
+        "বাসাবো": "khilgaon", "সবুজবাগ": "khilgaon", "মুগদা": "khilgaon",
+        "মাদারটেক": "khilgaon", "নন্দীপাড়া": "khilgaon",
+
+        /* ===================== JATRABARI / DEMRA ===================== */
+        "যাত্রাবাড়ী": "jatrabari", "সায়েদাবাদ": "jatrabari", "ধলপুর": "jatrabari",
+        "ডেমরা": "jatrabari", "সারুলিয়া": "jatrabari", "কোনাপাড়া": "jatrabari",
+        "দনিয়া": "jatrabari", "মাতুয়াইল": "jatrabari",
+
+        /* ===================== OLD DHAKA ===================== */
+        "লালবাগ": "olddhaka", "কোতোয়ালি": "olddhaka", "সূত্রাপুর": "olddhaka",
+        "শাঁখারীবাজার": "olddhaka", "চকবাজার": "olddhaka", "আরমানিটোলা": "olddhaka",
+        "ইসলামপুর": "olddhaka", "ওয়ারী": "olddhaka", "গেন্ডারিয়া": "olddhaka",
+        "নারিন্দা": "olddhaka", "ধোলাইখাল": "olddhaka", "সদরঘাট": "olddhaka",
+        "তাঁতীবাজার": "olddhaka", "বাবু বাজার": "olddhaka", "বংশাল": "olddhaka",
+
+        /* ===================== KHILKHET ===================== */
+        "খিলক্ষেত": "khilkhet", "নামাপাড়া": "khilkhet", "বরুয়া": "khilkhet",
+
+        /* ===================== SAVAR / OUTER ===================== */
+        "সাভার": "savar", "আশুলিয়া": "savar", "ধামসোনা": "savar", "হেমায়েতপুর": "savar",
+        "নবীনগর": "savar", "জিরাবো": "savar",
+    };
     /* ---------- STEP 3: Contact ---------- */
     const toggleContact = (type) => {
         setProviderData({
@@ -76,6 +186,42 @@ const ProviderOnboarding = () => {
             navigate("/dokkho/provider/dashboard");
         }
     };
+    useEffect(() => {
+        const fetchAreas = async () => {
+            try {
+                setIsLoading(true);
+                // আমরা ঢাকা শহরের নির্দিষ্ট এলাকা (suburb) গুলোকে টার্গেট করছি
+                const res = await axios.get(
+                    `https://nominatim.openstreetmap.org/search?q=Dhaka&format=json&addressdetails=1&accept-language=bn&limit=100`
+                );
+
+                const areaNames = res.data
+                    .map(item => {
+                        const addr = item.address;
+                        // এখানে আমরা অগ্রাধিকার ভিত্তিতে নামগুলো চেক করছি
+                        return addr.quarter || addr.suburb || addr.neighbourhood || addr.city_district;
+                    })
+                    .filter(name => name !== undefined && name !== "" && name !== "ঢাকা"); // "ঢাকা" নামটা বাদ দিচ্ছি যাতে শুধু এলাকা দেখায়
+
+                // ডুপ্লিকেট নাম বাদ দেওয়া
+                const uniqueAreas = [...new Set(areaNames)];
+
+                if (uniqueAreas.length > 0) {
+                    setAreas(uniqueAreas.sort()); // বর্ণানুসারে সাজানো
+                } else {
+                    // যদি API থেকে কিছু না আসে তবে ব্যাকআপ লিস্ট
+                    setAreas(["ধানমন্ডি", "মিরপুর", "উত্তরা", "মোহাম্মদপুর", "গুলশান", "বনানী", "সাভার"]);
+                }
+
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Area fetching error:", error);
+                setIsLoading(false);
+            }
+        };
+
+        fetchAreas();
+    }, []);
 
 
 
@@ -192,26 +338,87 @@ const ProviderOnboarding = () => {
                             আপনার কাজের এলাকা নির্বাচন করুন
                         </p>
 
+                        {/* অটো লোকেশন বাটন */}
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                if (!navigator.geolocation) return alert("লোকেশন সাপোর্ট নেই।");
+                                navigator.geolocation.getCurrentPosition(async (pos) => {
+                                    try {
+                                        const { latitude, longitude } = pos.coords;
+                                        const res = await axios.get(
+                                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=bn`
+                                        );
+                                        const adr = res.data.address;
+                                        const detectedArea = adr.suburb || adr.neighbourhood || adr.city_district || adr.town || adr.village;
+
+                                        if (detectedArea) {
+                                            const detectedSub =
+                                                adr.suburb ||
+                                                adr.quarter ||
+                                                adr.neighbourhood ||
+                                                adr.city_district;
+
+                                            const parentArea = AREA_PARENT_MAP[detectedSub];
+
+                                            if (parentArea) {
+                                                setProviderData({
+                                                    ...providerData,
+                                                    locationParent: parentArea,
+                                                    locationSub: detectedSub,
+                                                });
+
+                                                Swal.fire({
+                                                    icon: "success",
+                                                    title: "লোকেশন সনাক্ত হয়েছে",
+                                                    text: `${detectedSub} (${parentArea})`,
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    icon: "warning",
+                                                    title: "এলাকা সনাক্ত হয়নি",
+                                                    text: "দয়া করে ম্যানুয়ালি এলাকা নির্বাচন করুন",
+                                                });
+                                            }
+                                            // Swal ব্যবহার করলে দেখতে আরও সুন্দর লাগবে
+                                            alert(`সনাক্ত করা এলাকা: ${detectedArea}`);
+                                        }
+                                    } catch (error) {
+                                        alert("লোকেশন খুঁজে পাওয়া যায়নি।");
+                                    }
+                                });
+                            }}
+                            className="w-full mb-4 py-3 px-4 bg-blue-50 border border-blue-200 text-blue-600 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-100 transition"
+                        >
+                            <MdLocationOn /> বর্তমান লোকেশন ব্যবহার করুন
+                        </button>
+
                         <select
-                            className="w-full border rounded-xl p-4 mb-4"
-                            value={providerData.location}
+                            className="w-full border rounded-xl p-4 mb-4 focus:ring-2 focus:ring-green-500 outline-none"
+                            value={providerData.locationParent}
                             onChange={(e) =>
                                 setProviderData({
                                     ...providerData,
-                                    location: e.target.value,
+                                    locationParent: e.target.value,
                                 })
                             }
                         >
-                            <option value="">এরিয়া নির্বাচন করুন</option>
-                            {areas.map((area) => (
-                                <option key={area}>{area}</option>
+                            <option value="">এরিয়া নির্বাচন করুন</option>
+
+                            {PARENT_AREAS.map((area) => (
+                                <option key={area.key} value={area.key}>
+                                    {area.label}
+                                </option>
                             ))}
                         </select>
 
-                        <label className="flex items-center gap-2 mb-8">
+
+                        {/* আপনার কোডে এই অংশটি ইনকমপ্লিট ছিল, এটি যোগ করে দিলাম */}
+                        <label className="flex items-center gap-2 mb-8 cursor-pointer select-none">
                             <input
                                 type="checkbox"
-                                checked={providerData.areaOnly}
+                                className="w-5 h-5 accent-green-500 rounded"
+                                checked={providerData.areaOnly || false}
                                 onChange={(e) =>
                                     setProviderData({
                                         ...providerData,
@@ -219,22 +426,22 @@ const ProviderOnboarding = () => {
                                     })
                                 }
                             />
-                            আমি শুধু এই এলাকাতেই কাজ করি
+                            <span className="text-gray-700">আমি শুধু এই এলাকাতেই কাজ করি</span>
                         </label>
 
                         <div className="flex gap-4">
                             <button
                                 onClick={prevStep}
-                                className="w-1/2 border py-4 rounded-xl"
+                                className="w-1/2 border py-4 rounded-xl hover:bg-gray-50 transition"
                             >
                                 পেছনে
                             </button>
                             <button
-                                disabled={!providerData.location}
+                                disabled={!providerData.locationParent}
                                 onClick={nextStep}
-                                className="w-1/2 bg-green-500 text-white py-4 rounded-xl disabled:opacity-50"
+                                className="w-1/2 bg-green-500 text-white py-4 rounded-xl disabled:opacity-50 hover:bg-green-600 transition font-medium"
                             >
-                                এগিয়ে যান
+                                এগিয়ে যান
                             </button>
                         </div>
                     </>
