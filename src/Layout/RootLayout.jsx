@@ -24,10 +24,14 @@ const RootLayout = () => {
     const [providerData, setProviderData] = useState({
         name: "",
         service: "",
+        experience: "",
         location: "",
         areaOnly: false,
         contact: { phone: true, whatsapp: true },
     });
+    const [providers, setProviders] = useState([]);
+    const [providersLoading, setProvidersLoading] = useState(false);
+
 
     // OTP verify = customer
     const ensureCustomerRole = async (firebaseUser) => {
@@ -58,6 +62,25 @@ const RootLayout = () => {
     useEffect(() => {
         if (role) localStorage.setItem("dokkho_role", role);
     }, [role]);
+    
+    const fetchProviders = async ({ serviceKey } = {}) => {
+        setProvidersLoading(true);
+
+        try {
+            const res = await axios.get("http://localhost:3000/providers", {
+                params: {
+                    service: serviceKey || undefined,
+                },
+            });
+
+            setProviders(res.data || []);
+        } catch (error) {
+            console.error("Failed to fetch providers", error);
+            setProviders([]);
+        } finally {
+            setProvidersLoading(false);
+        }
+    };
 
     const fetchProvider = async () => {
         setCheckingProvider(true);
@@ -139,6 +162,9 @@ const RootLayout = () => {
                 role,
                 setRole,
                 provider,
+                providers,
+                providersLoading,
+                fetchProviders,
                 providerExists,
                 checkingProvider,
                 providerData,

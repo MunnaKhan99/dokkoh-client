@@ -22,11 +22,19 @@ const ProviderOnboarding = () => {
 
     /* ---------- STEP 1: Service ---------- */
     const services = [
-        { id: "ইলেকট্রিশিয়ান", label: "ইলেকট্রিশিয়ান", icon: <FaBolt /> },
-        { id: "প্লাম্বার", label: "প্লাম্বার", icon: <FaTools /> },
-        { id: "হোম টিউটর", label: "হোম টিউটর", icon: <FaBook /> },
-        { id: "অন্যান্য", label: "অন্যান্য", icon: <FaBriefcase /> },
+        { id: "electrician", label: "ইলেক্ট্রিশিয়ান", icon: <FaBolt /> },
+        { id: "plumber", label: "প্লাম্বার", icon: <FaTools /> },
+        { id: "tutor", label: "হোম টিউটর", icon: <FaBook /> },
+        { id: "others", label: "অন্যান্য", icon: <FaBriefcase /> },
     ];
+
+    const experiences = [
+        { id: "১–৩", label: "১–৩ বছর" },
+        { id: "৩–৫", label: "৩–৫ বছর" },
+        { id: "৫–৮", label: "৫–৮ বছর" },
+        { id: "৮–১৫", label: "৮–১৫ বছর" },
+    ];
+
 
     /* ---------- STEP 2: Location ---------- */
     const areas = ["ধানমন্ডি", "মিরপুর", "উত্তরা", "মোহাম্মদপুর"];
@@ -45,6 +53,7 @@ const ProviderOnboarding = () => {
     /* ---------- Submit ---------- */
     const handleComplete = async () => {
         const result = await submitProviderOnboarding();
+        console.log(result);
 
         if (!result?.success) return;
 
@@ -133,9 +142,38 @@ const ProviderOnboarding = () => {
                                 </div>
                             ))}
                         </div>
+                        <h2 className="text-2xl font-semibold mt-12 mb-2">
+                            আপনার কত বছরের অভিজ্ঞতা?
+                        </h2>
+                        <p className="text-gray-500 mb-8">
+                            আপনার মোট কাজের অভিজ্ঞতা নির্বাচন করুন
+                        </p>
+
+                        <div className="grid grid-cols-2 gap-6">
+                            {experiences.map((item) => (
+                                <div
+                                    key={item.id}
+                                    onClick={() =>
+                                        setProviderData({
+                                            ...providerData,
+                                            experience: item.id,
+                                        })
+                                    }
+
+                                    className={`cursor-pointer border rounded-xl h-24 flex items-center justify-center
+                ${providerData.experience === item.id
+                                            ? "border-green-500 bg-green-50"
+                                            : "border-gray-200"
+                                        }`}
+                                >
+                                    <p className="font-medium">{item.label}</p>
+                                </div>
+                            ))}
+                        </div>
+
 
                         <button
-                            disabled={!providerData.service || !providerData.name}
+                            disabled={!providerData.service || !providerData.name || !providerData.experience}
                             onClick={nextStep}
                             className="mt-10 w-full bg-green-500 text-white py-4 rounded-xl disabled:opacity-50"
                         >

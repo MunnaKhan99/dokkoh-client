@@ -1,119 +1,56 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router";
 import {
-    FaUser,
     FaPhoneAlt,
     FaBriefcase,
     FaSignOutAlt,
     FaArrowLeft,
 } from "react-icons/fa";
-import { useNavigate } from "react-router";
 import { dokkhoContext } from "../../Layout/RootLayout";
 
 const CustomerProfile = () => {
+    const { user, role, logout, loading } = useContext(dokkhoContext);
     const navigate = useNavigate();
 
-    const {
-        user,
-        role,
-        loading,
-        logout,
-    } = useContext(dokkhoContext);
-    // console.log(user);
-
-    // লোডিং অবস্থা
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>লোড হচ্ছে...</p>
-            </div>
-        );
-    }
-
-    // সেফটি ফallback
-    if (!user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p>প্রোভাইডার প্রোফাইল পাওয়া যায়নি</p>
-            </div>
-        );
-    }
+    if (loading) return <p className="text-center mt-20">লোড হচ্ছে...</p>;
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center">
-            {/* হেডার */}
-            <div className="w-full bg-[#1DBF73] p-6 pb-20 text-white shadow-md">
-                <div className="max-w-md mx-auto flex items-center gap-4">
-                    <button onClick={() => navigate(-1)}>
-                        <FaArrowLeft size={20} />
-                    </button>
-                    <h1 className="text-xl font-semibold">
-                        আমার প্রোফাইল
-                    </h1>
-                </div>
+        <div className="min-h-screen bg-gray-50">
+            <div className="bg-[#1DBF73] p-6 text-white flex items-center gap-4">
+                <button onClick={() => navigate(-1)}>
+                    <FaArrowLeft />
+                </button>
+                <h1 className="text-xl font-semibold">আমার প্রোফাইল</h1>
             </div>
 
-            {/* প্রোফাইল */}
-            <div className="w-full max-w-md px-6 -mt-12">
-                <div className="flex flex-col items-center mb-8">
-                    <div className="w-28 h-28 bg-[#1DBF73] rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-lg">
-                        {/* {provider.name?.[0]?.toUpperCase() || "P"} */}
-                    </div>
-
-                    <h2 className="mt-4 text-2xl font-bold text-gray-800">
-                        {user?.phoneNumber}
-                    </h2>
-
-                    <p className="text-gray-500 font-medium capitalize">
-                        {role}
-                    </p>
+            <div className="max-w-md mx-auto px-6 -mt-10">
+                <div className="bg-white rounded-2xl p-6 text-center shadow">
+                    <h2 className="text-xl font-bold">{user?.phoneNumber}</h2>
+                    <p className="text-gray-500 capitalize">{role}</p>
                 </div>
 
-                {/* তথ্য তালিকা */}
-                <div className="space-y-4">
-                    {/* <InfoRow
-                        icon={<FaUser />}
-                        label="নাম"
-                        value={provider.name}
-                    /> */}
-
-                    <InfoRow
-                        icon={<FaPhoneAlt />}
-                        label="ফোন নম্বর"
-                        value={user?.phoneNumber}
-                    />
-
-                    <InfoRow
-                        icon={<FaBriefcase />}
-                        label="ভূমিকা"
-                        value={role}
-                    />
+                <div className="mt-6 space-y-4">
+                    <Info label="ফোন নম্বর" value={user?.phoneNumber} icon={<FaPhoneAlt />} />
+                    <Info label="ভূমিকা" value={role} icon={<FaBriefcase />} />
                 </div>
 
-                {/* লগআউট */}
                 <button
                     onClick={logout}
-                    className="w-full mt-10 mb-10 py-3.5 border-2 border-red-500 text-red-500 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-red-50"
+                    className="w-full mt-10 py-3 border-2 border-red-500 text-red-500 rounded-xl flex justify-center gap-3"
                 >
-                    <FaSignOutAlt size={20} />
-                    লগআউট
+                    <FaSignOutAlt /> লগআউট
                 </button>
             </div>
         </div>
     );
 };
 
-const InfoRow = ({ icon, label, value }) => (
-    <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-        <div className="bg-gray-100 p-3 rounded-full text-gray-600">
-            {icon}
-        </div>
+const Info = ({ icon, label, value }) => (
+    <div className="bg-white p-4 rounded-xl shadow flex gap-4 items-center">
+        <div className="bg-gray-100 p-3 rounded-full">{icon}</div>
         <div>
-            <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">
-                {label}
-            </p>
-            <p className="text-gray-800 font-semibold">
-                {value || "-"}
-            </p>
+            <p className="text-xs text-gray-400 font-bold">{label}</p>
+            <p className="font-semibold">{value || "-"}</p>
         </div>
     </div>
 );

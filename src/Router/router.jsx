@@ -10,6 +10,8 @@ import ProviderProfile from "../pages/ProviderProfile/ProviderProfile";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import CustomerDashboard from "../pages/CustomerProfile/CustomerDashborad";
 import CustomerProfile from "../pages/CustomerProfile/CustomerProfile";
+import ServiceList from "../pages/CustomerProfile/ServiceList";
+import ProviderDetails from "../pages/ProviderDetails/ProviderDetails";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -26,7 +28,10 @@ const router = createBrowserRouter([
             { path: "/dokkho/provider/profile", element: <PrivateRoute><ProviderProfile /></PrivateRoute> },
 
             { path: "/dokkho/customer/dashboard", element: <PrivateRoute><CustomerDashboard /></PrivateRoute> },
-            { path: "/dokkho/customer/profile", element: <PrivateRoute><CustomerProfile /></PrivateRoute> }
+            { path: "/dokkho/customer/profile", element: <PrivateRoute><CustomerProfile /></PrivateRoute> },
+            { path: "/dokkho/customer/services/:serviceKey", element: <PrivateRoute><ServiceList></ServiceList></PrivateRoute> },
+
+            { path: "/dokkho/provider/:providerId", element: <PrivateRoute><ProviderDetails></ProviderDetails></PrivateRoute> }
         ],
     },
 ]);

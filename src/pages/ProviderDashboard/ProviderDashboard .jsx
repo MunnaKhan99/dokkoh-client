@@ -15,7 +15,7 @@ const ProviderDashboard = () => {
         providerLoading,
         toggleProviderAvailability,
     } = useContext(dokkhoContext);
-
+    console.log(provider);
     if (providerLoading) {
         return <p className="p-10">Loading...</p>;
     }
@@ -67,16 +67,16 @@ const ProviderDashboard = () => {
                                     {provider.name}
                                 </h2>
                                 <p className="text-gray-500 font-medium text-lg capitalize">
-                                    {provider.service}
+                                    {provider.serviceName}
                                 </p>
 
                                 <div className="flex items-center gap-1 mt-1">
                                     <FaStar className="text-yellow-400" />
                                     <span className="font-bold text-gray-700 text-lg">
-                                        {provider.rating || 4.8}
+                                        {provider.rating}
                                     </span>
                                     <span className="text-gray-400">
-                                        ({provider.reviewsCount || 127} রিভিউ)
+                                        ({provider.ratingCount} রিভিউ)
                                     </span>
                                 </div>
                             </div>
@@ -97,8 +97,8 @@ const ProviderDashboard = () => {
                                 <div className="flex items-center gap-3">
                                     <span
                                         className={`font-bold ${provider.availability
-                                                ? "text-[#0FA958]"
-                                                : "text-red-500"
+                                            ? "text-[#0FA958]"
+                                            : "text-red-500"
                                             }`}
                                     >
                                         {provider.availability ? "ফ্রি" : "ব্যস্ত"}
@@ -120,7 +120,7 @@ const ProviderDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
                         <p className="text-[#0FA958] text-3xl font-black">
-                            {provider.reviewsCount || 127}
+                            {provider.ratingCount || 127}
                         </p>
                         <p className="text-gray-400 font-medium mt-1 uppercase tracking-wide">
                             রিভিউ
@@ -138,7 +138,7 @@ const ProviderDashboard = () => {
 
                     <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
                         <p className="text-[#0FA958] text-3xl font-black">
-                            {provider.experienceYears || "১০+"}
+                            {provider.experience || "১০+"}
                         </p>
                         <p className="text-gray-400 font-medium mt-1 uppercase tracking-wide">
                             বছর
