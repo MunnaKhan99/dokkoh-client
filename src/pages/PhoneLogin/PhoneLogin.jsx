@@ -58,7 +58,7 @@ const PhoneLogin = () => {
         <div className="flex min-h-screen w-full flex-col items-center justify-center bg-white px-6">
             <div className="w-full max-w-md text-center">
                 {/* Icon */}
-                <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[#0FA958]">
+                <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[#2563EB]">
                     <FaPhoneAlt size={35} className="text-white -rotate-12" />
                 </div>
 
@@ -98,7 +98,7 @@ const PhoneLogin = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="mt-6 w-full rounded-xl bg-[#82E0C1] py-4 text-lg font-bold text-white transition-all hover:bg-[#0FA958] disabled:opacity-60"
+                        className="mt-6 w-full rounded-xl bg-[#82E0C1] py-4 text-lg font-bold text-white transition-all hover:bg-[#2563EB] disabled:opacity-60"
                     >
                         {loading ? "পাঠানো হচ্ছে..." : "ওটিপি (OTP) পাঠান"}
                     </button>

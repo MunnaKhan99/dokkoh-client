@@ -135,10 +135,10 @@ const AREA_PARENT_MAP = {
 };
 
 const CustomerDashboard = () => {
-    const { user, setCustomerParentArea } = useContext(dokkhoContext);
+    const { setCustomerParentArea } = useContext(dokkhoContext);
     const navigate = useNavigate();
     const [locationName, setLocationName] = useState("লোকেশন নেওয়া হচ্ছে...");
-    
+
     useEffect(() => {
         if (!navigator.geolocation) return;
 
@@ -171,9 +171,9 @@ const CustomerDashboard = () => {
 
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[#F1F5F9]">
             {/* Header */}
-            <div className="bg-[#0FA958] pt-6 pb-12 px-8 text-white">
+            <div className="bg-[#2563EB] pt-6 pb-12 px-8 text-white">
                 <div className="flex justify-between max-w-7xl mx-auto">
                     <div>
                         <h1 className="text-2xl font-bold">দক্ষ</h1>
@@ -181,9 +181,24 @@ const CustomerDashboard = () => {
                             আপনার বিশ্বস্ত স্থানীয় সেবা মাধ্যম
                         </p>
                     </div>
-                    <Link to="/dokkho/customer/profile">
-                        <FaRegUserCircle size={28} />
-                    </Link>
+
+                    <div className="flex items-center gap-3">
+                        <Link
+                            to="/dokkho/provider/dashboard"
+                            className="relative p-[1.5px] overflow-hidden rounded-full inline-block group shadow-lg"
+                        >
+                            {/* Animated Shimmer Border - Gold/White Glow */}
+                            <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#F59E0B_0%,#FFF_50%,#F59E0B_100%)]" />
+
+                            {/* Inner Button Content */}
+                            <div className="relative px-4 py-1.5  rounded-full text-[10px] md:text-xs font-bold text-black flex items-center gap-2 transition-all duration-300">
+                                প্রোভাইডার মোড
+                            </div>
+                        </Link>
+                        <Link to="/dokkho/customer/profile">
+                            <FaRegUserCircle size={28} />
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Location */}

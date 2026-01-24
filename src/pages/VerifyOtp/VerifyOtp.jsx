@@ -59,7 +59,7 @@ const VerifyOtp = () => {
         <div className="flex min-h-screen w-full flex-col items-center justify-center bg-white px-6">
             <div className="w-full max-w-md text-center">
                 {/* Icon */}
-                <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[#0FA958]">
+                <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[#2563EB]">
                     <LuShieldCheck size={40} className="text-white" />
                 </div>
 
@@ -90,7 +90,7 @@ const VerifyOtp = () => {
 
                     <button
                         type="submit"
-                        className="mt-8 w-full rounded-xl bg-[#82E0C1] py-4 text-lg font-bold text-white transition-all hover:bg-[#0FA958]"
+                        className="mt-8 w-full rounded-xl bg-[#82E0C1] py-4 text-lg font-bold text-white transition-all hover:bg-[#2563EB]"
                     >
                         যাচাই করুন এবং এগিয়ে যান
                     </button>

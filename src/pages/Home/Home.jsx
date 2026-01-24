@@ -14,7 +14,7 @@ const Home = () => {
     }, [navigate]);
 
     return (
-        <div className="flex h-screen w-full flex-col items-center justify-center bg-[#0FA958]">
+        <div className="flex h-screen w-full flex-col items-center justify-center bg-[#2563EB]">
             <div className="flex flex-col items-center">
                 <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-lg">
                     <FaHandshake size={50} className="text-[#0FA958]" />

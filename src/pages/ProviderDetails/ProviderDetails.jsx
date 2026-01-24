@@ -94,7 +94,10 @@ const ProviderDetails = () => {
                         <FaMapMarkerAlt /> এলাকা
                     </p>
                     <p className="font-medium">
-                        {provider.location}
+                        {
+                            provider.locationSub ? <p>{provider.locationSub}</p> : <p>{provider.locationParent}</p>
+
+                        }
                     </p>
                 </div>
 

@@ -5,11 +5,14 @@ import {
     FaMapMarkerAlt,
     FaUser,
     FaCamera,
+    FaArrowLeft,
+    FaArrowRight,
 } from "react-icons/fa";
 import { MdEditNote } from "react-icons/md";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const ProviderDashboard = () => {
+    const navigate = useNavigate()
     const {
         provider,
         providerLoading,
@@ -25,22 +28,45 @@ const ProviderDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-12">
+        <div className="min-h-screen bg-[#F1F5F9] pb-12">
             {/* Header */}
-            <div className="bg-[#0FA958] text-white px-6 md:px-16 pt-10 pb-24">
-                <div className="max-w-6xl mx-auto flex justify-between items-start">
+            {/* Header */}
+            <div className="bg-[#2563EB] text-white px-6 md:px-16 pt-10 pb-24">
+                <div className="max-w-6xl mx-auto flex justify-between items-center"> {/* items-start এর বদলে items-center ভালো দেখাবে */}
+
                     <div>
-                        <h1 className="text-3xl font-bold">আমার ড্যাশবোর্ড</h1>
-                        <p className="text-sm opacity-90 mt-1">
+                        <h1 className="text-2xl md:text-3xl font-bold leading-tight">
+                            আমার ড্যাশবোর্ড
+                        </h1>
+                        <p className="text-xs md:text-sm opacity-85">
                             আপনার সার্ভিস প্রোফাইল পরিচালনা করুন
                         </p>
+
                     </div>
 
-                    <div className="border-2 rounded-full p-2">
-                        <Link to="/dokkho/provider/profile">
-                            <FaUser className="text-xl" />
+                    {/* Profile Icon */}
+                    {/* Header - Profile Icon এর বামে নিচের অংশটুকু যোগ করুন */}
+                    <div className="flex items-center gap-3">
+                        <Link
+                            to="/dokkho/customer/dashboard"
+                            className="relative p-[1.5px] overflow-hidden rounded-full inline-block group shadow-lg"
+                        >
+                            {/* Animated Gradient Border - Amber/Gold Glow */}
+                            <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#F59E0B_0%,#FFF_50%,#F59E0B_100%)]" />
+
+                            {/* Inner Button Content */}
+                            <div className="relative px-4 py-1.5  rounded-full text-[10px] md:text-xs font-bold text-black flex items-center gap-2 transition-all duration-300">
+                                কাস্টমার মোড
+                            </div>
                         </Link>
+
+                        <div className="border-2 border-white/30 rounded-full p-2.5 hover:bg-white/10 transition-all">
+                            <Link to="/dokkho/provider/profile">
+                                <FaUser className="text-lg md:text-xl" />
+                            </Link>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -54,10 +80,10 @@ const ProviderDashboard = () => {
                         {/* Profile Info */}
                         <div className="flex items-center gap-6">
                             <div className="relative">
-                                <div className="h-24 w-24 rounded-full bg-[#0FA958] flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md">
+                                <div className="h-24 w-24 rounded-full bg-[#2563EB] flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md">
                                     {provider.name?.slice(0, 2).toUpperCase()}
                                 </div>
-                                <div className="absolute bottom-1 right-1 bg-[#0FA958] p-2 rounded-full border-2 border-white text-white text-xs">
+                                <div className="absolute bottom-1 right-1 bg-[#2563EB] p-2 rounded-full border-2 border-white text-white text-xs">
                                     <FaCamera />
                                 </div>
                             </div>
@@ -195,6 +221,7 @@ const ProviderDashboard = () => {
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>

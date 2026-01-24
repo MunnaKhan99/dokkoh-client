@@ -25,7 +25,7 @@ const ServiceList = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* ---------- Header ---------- */}
-            <div className="bg-[#0FA958] p-6 text-white">
+            <div className="bg-[#2563EB] p-6 text-white">
                 <button onClick={() => navigate(-1)}>
                     <FaArrowLeft />
                 </button>
