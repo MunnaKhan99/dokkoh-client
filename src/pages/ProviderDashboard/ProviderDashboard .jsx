@@ -28,205 +28,172 @@ const ProviderDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#F1F5F9] pb-12">
-            {/* Header */}
-            {/* Header */}
-            <div className="bg-[#2563EB] text-white px-6 md:px-16 pt-10 pb-24">
-                <div className="max-w-6xl mx-auto flex justify-between items-center"> {/* items-start এর বদলে items-center ভালো দেখাবে */}
+        <div className="min-h-screen bg-[#F8FAFC] pb-12">
 
+            {/* Header: Primary Blue (#4169E1) */}
+            <div className="bg-[#4169E1] text-white px-6 md:px-12 pt-10 pb-28 rounded-b-[40px] shadow-lg relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-[-20px] right-[-20px] h-32 w-32 rounded-full bg-white/10 blur-2xl"></div>
+
+                <div className="max-w-7xl mx-auto flex justify-between items-center relative z-10">
                     <div>
-                        <h1 className="text-2xl md:text-3xl font-bold leading-tight">
+                        <h1 className="text-2xl md:text-4xl font-black tracking-tight">
                             আমার ড্যাশবোর্ড
                         </h1>
-                        <p className="text-xs md:text-sm opacity-85">
-                            আপনার সার্ভিস প্রোফাইল পরিচালনা করুন
+                        <p className="text-[10px] md:text-sm opacity-80 uppercase font-bold tracking-widest mt-1">
+                            সার্ভিস প্রোফাইল পরিচালনা করুন
                         </p>
-
                     </div>
 
-                    {/* Profile Icon */}
-                    {/* Header - Profile Icon এর বামে নিচের অংশটুকু যোগ করুন */}
                     <div className="flex items-center gap-3">
+                        {/* Customer Mode Toggle: Shimmer Effect with Orange (#FF9F4B) */}
                         <Link
                             to="/dokkho/customer/dashboard"
-                            className="relative p-[1.5px] overflow-hidden rounded-full inline-block group shadow-lg"
+                            className="relative p-[1.5px] overflow-hidden rounded-full inline-block group shadow-xl transition-all active:scale-95"
                         >
-                            {/* Animated Gradient Border - Amber/Gold Glow */}
-                            <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#F59E0B_0%,#FFF_50%,#F59E0B_100%)]" />
-
-                            {/* Inner Button Content */}
-                            <div className="relative px-4 py-1.5  rounded-full text-[10px] md:text-xs font-bold text-black flex items-center gap-2 transition-all duration-300">
+                            <span className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FF9F4B_0%,#FFF_50%,#FF9F4B_100%)]" />
+                            <div className="relative px-4 py-2 bg-white rounded-full text-[10px] md:text-xs font-black text-[#2C2B2B]">
                                 কাস্টমার মোড
                             </div>
                         </Link>
 
-                        <div className="border-2 border-white/30 rounded-full p-2.5 hover:bg-white/10 transition-all">
-                            <Link to="/dokkho/provider/profile">
-                                <FaUser className="text-lg md:text-xl" />
-                            </Link>
-                        </div>
+                        <Link to="/dokkho/provider/profile" className="p-2 border-2 border-white/30 rounded-full hover:bg-white/20 transition-all">
+                            <FaUser className="text-lg md:text-xl" />
+                        </Link>
                     </div>
-
                 </div>
             </div>
 
-            {/* Main */}
-            <div className="max-w-6xl mx-auto px-6 -mt-16">
+            {/* Main Content Area */}
+            <div className="max-w-7xl mx-auto px-6 md:px-12 -mt-16 relative z-20">
 
                 {/* Profile Card */}
-                <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                <div className="bg-white rounded-[32px] p-6 md:p-8 shadow-xl shadow-blue-900/5 border border-gray-50 mb-8">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
 
                         {/* Profile Info */}
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-5 md:gap-8">
                             <div className="relative">
-                                <div className="h-24 w-24 rounded-full bg-[#2563EB] flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-md">
-                                    {provider.name?.slice(0, 2).toUpperCase()}
+                                <div className="h-20 w-20 md:h-28 md:w-28 rounded-3xl bg-[#008B9C] flex items-center justify-center text-white text-3xl md:text-4xl font-black border-4 border-white shadow-lg">
+                                    {provider.name?.slice(0, 1).toUpperCase()}
                                 </div>
-                                <div className="absolute bottom-1 right-1 bg-[#2563EB] p-2 rounded-full border-2 border-white text-white text-xs">
-                                    <FaCamera />
+                                <div className="absolute -bottom-2 -right-2 bg-[#4169E1] p-2.5 rounded-xl border-4 border-white text-white shadow-md cursor-pointer hover:scale-110 transition-transform">
+                                    <FaCamera size={14} />
                                 </div>
                             </div>
 
                             <div>
-                                <h2 className="font-bold text-2xl text-gray-800">
+                                <h2 className="font-black text-2xl md:text-3xl text-[#2C2B2B]">
                                     {provider.name}
                                 </h2>
-                                <p className="text-gray-500 font-medium text-lg capitalize">
-                                    {provider.serviceName}
+                                <p className="text-[#008B9C] font-bold text-sm md:text-lg capitalize">
+                                    {provider.serviceName || "পেশাদার সেবাদাতা"}
                                 </p>
 
-                                <div className="flex items-center gap-1 mt-1">
-                                    <FaStar className="text-yellow-400" />
-                                    <span className="font-bold text-gray-700 text-lg">
-                                        {provider.rating}
+                                <div className="flex items-center gap-1.5 mt-2 bg-yellow-50 w-fit px-3 py-1 rounded-lg">
+                                    <FaStar className="text-[#FF9F4B]" />
+                                    <span className="font-black text-[#2C2B2B] text-sm">
+                                        {provider.rating || "5.0"}
                                     </span>
-                                    <span className="text-gray-400">
-                                        ({provider.ratingCount} রিভিউ)
+                                    <span className="text-gray-400 text-xs font-bold">
+                                        ({provider.ratingCount || 0} রিভিউ)
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Availability */}
-                        <div className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-                            <div className="flex justify-between items-center gap-10">
+                        {/* Availability Toggle: Palette Specific */}
+                        <div className="bg-gray-50 p-5 rounded-[24px] border border-gray-100 lg:w-72">
+                            <div className="flex justify-between items-center">
                                 <div>
-                                    <p className="font-bold text-gray-800">
-                                        অ্যাভেইলেবিলিটি স্ট্যাটাস
-                                    </p>
-                                    <p className="text-xs text-gray-400 italic">
-                                        গ্রাহকরা আপনাকে দেখতে পাচ্ছেন
+                                    <p className="font-black text-[#2C2B2B] text-sm">স্ট্যাটাস</p>
+                                    <p className="text-[10px] text-gray-400 font-bold italic uppercase tracking-tighter">
+                                        {provider.availability ? "গ্রাহকরা আপনাকে দেখতে পাচ্ছেন" : "আপনি বর্তমানে অফলাইনে"}
                                     </p>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <span
-                                        className={`font-bold ${provider.availability
-                                            ? "text-[#0FA958]"
-                                            : "text-red-500"
-                                            }`}
-                                    >
-                                        {provider.availability ? "ফ্রি" : "ব্যস্ত"}
-                                    </span>
-
+                                <div className="flex flex-col items-end gap-1">
                                     <input
                                         type="checkbox"
                                         checked={provider.availability}
                                         onChange={toggleProviderAvailability}
-                                        className="toggle toggle-success"
+                                        className={`toggle toggle-lg ${provider.availability ? "bg-[#008B9C] border-[#008B9C]" : "bg-gray-300"}`}
                                     />
+                                    <span className={`text-[10px] font-black uppercase ${provider.availability ? "text-[#008B9C]" : "text-[#D62C49]"}`}>
+                                        {provider.availability ? "অনলাইন" : "অফলাইন"}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
-                        <p className="text-[#0FA958] text-3xl font-black">
-                            {provider.ratingCount || 127}
-                        </p>
-                        <p className="text-gray-400 font-medium mt-1 uppercase tracking-wide">
-                            রিভিউ
-                        </p>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
-                        <p className="text-yellow-500 text-3xl font-black">
-                            {provider.rating || 4.8}
-                        </p>
-                        <p className="text-gray-400 font-medium mt-1 uppercase tracking-wide">
-                            রেটিং
-                        </p>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
-                        <p className="text-[#0FA958] text-3xl font-black">
-                            {provider.experience || "১০+"}
-                        </p>
-                        <p className="text-gray-400 font-medium mt-1 uppercase tracking-wide">
-                            বছর
-                        </p>
-                    </div>
+                {/* Stats Grid: 3 Columns Desktop, 3 Columns Mobile (Small Cards) */}
+                <div className="grid grid-cols-3 gap-3 md:gap-6 mb-10">
+                    <StatCard count={provider.ratingCount || 0} label="রিভিউ" color="text-[#008B9C]" />
+                    <StatCard count={provider.rating || "5.0"} label="রেটিং" color="text-[#FF9F4B]" />
+                    <StatCard count={provider.experience || "১+"} label="অভিজ্ঞতা" color="text-[#4169E1]" />
                 </div>
 
-                {/* Quick Actions */}
+                {/* Quick Actions Section */}
                 <div>
-                    <h3 className="text-gray-500 font-bold text-lg mb-5 ml-2">
+                    <h3 className="text-[#2C2B2B] font-black text-xl mb-6 ml-1 flex items-center gap-2">
+                        <span className="w-2 h-6 bg-[#4169E1] rounded-full"></span>
                         কুইক অ্যাকশন
                     </h3>
 
-                    <div className="space-y-4">
-                        <div className="bg-white rounded-2xl p-5 flex items-center gap-5 shadow-sm border border-gray-50">
-                            <div className="bg-green-50 p-4 rounded-2xl text-[#0FA958]">
-                                <FaMapMarkerAlt className="text-2xl" />
-                            </div>
-                            <div>
-                                <p className="font-bold text-gray-800 text-lg">
-                                    লোকেশন পরিবর্তন করুন
-                                </p>
-                                <p className="text-gray-400">
-                                    আপনার সার্ভিস এরিয়া আপডেট করুন
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-5 flex items-center gap-5 shadow-sm border border-gray-50">
-                            <div className="bg-blue-50 p-4 rounded-2xl text-blue-500">
-                                <MdEditNote className="text-3xl" />
-                            </div>
-                            <div>
-                                <p className="font-bold text-gray-800 text-lg">
-                                    সার্ভিস পরিবর্তন করুন
-                                </p>
-                                <p className="text-gray-400">
-                                    আপনার অফার করা সার্ভিসগুলো আপডেট করুন
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-5 flex items-center gap-5 shadow-sm border border-gray-50">
-                            <div className="bg-yellow-50 p-4 rounded-2xl text-yellow-600">
-                                <FaCamera className="text-2xl" />
-                            </div>
-                            <div>
-                                <p className="font-bold text-gray-800 text-lg">
-                                    ছবি আপলোড করুন
-                                </p>
-                                <p className="text-gray-400">
-                                    আপনার প্রোফাইল ছবি আপডেট করুন
-                                </p>
-                            </div>
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <ActionItem
+                            icon={<FaMapMarkerAlt />}
+                            title="লোকেশন পরিবর্তন"
+                            desc="সার্ভিস এরিয়া আপডেট করুন"
+                            iconBg="bg-[#008B9C]/10"
+                            iconColor="text-[#008B9C]"
+                        />
+                        <ActionItem
+                            icon={<MdEditNote size={28} />}
+                            title="সার্ভিস পরিবর্তন"
+                            desc="অফার করা সার্ভিসগুলো এডিট করুন"
+                            iconBg="bg-[#4169E1]/10"
+                            iconColor="text-[#4169E1]"
+                        />
+                        <ActionItem
+                            icon={<FaCamera />}
+                            title="ছবি আপলোড"
+                            desc="কাজের ছবি বা প্রোফাইল আপডেট করুন"
+                            iconBg="bg-[#FF9F4B]/10"
+                            iconColor="text-[#FF9F4B]"
+                        />
                     </div>
-
                 </div>
-
             </div>
         </div>
     );
 };
+
+/* Helper Component: Stat Card */
+const StatCard = ({ count, label, color }) => (
+    <div className="bg-white rounded-3xl p-4 md:p-6 text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <p className={`${color} text-xl md:text-3xl font-black tracking-tighter`}>{count}</p>
+        <p className="text-[10px] md:text-xs text-gray-400 font-black uppercase mt-1 tracking-widest">{label}</p>
+    </div>
+);
+
+/* Helper Component: Action Item */
+const ActionItem = ({ icon, title, desc, iconBg, iconColor }) => (
+    <div className="bg-white rounded-[24px] p-5 flex items-center gap-5 shadow-sm border border-gray-50 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group">
+        <div className={`${iconBg} ${iconColor} p-4 rounded-2xl text-2xl group-hover:scale-110 transition-transform`}>
+            {icon}
+        </div>
+        <div>
+            <p className="font-black text-[#2C2B2B] text-base md:text-lg tracking-tight">
+                {title}
+            </p>
+            <p className="text-xs text-gray-400 font-medium">
+                {desc}
+            </p>
+        </div>
+    </div>
+);
 
 export default ProviderDashboard;

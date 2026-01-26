@@ -171,91 +171,110 @@ const CustomerDashboard = () => {
 
 
     return (
-        <div className="min-h-screen bg-[#F1F5F9]">
-            {/* Header */}
-            <div className="bg-[#2563EB] pt-6 pb-12 px-8 text-white">
-                <div className="flex justify-between max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#F8FAFC]">
+            {/* Header: Primary Blue (#4169E1) এবং Rounded Bottom ডিজাইন */}
+            <div className="bg-[#4169E1] pt-8 pb-20 px-6 md:px-12 text-white rounded-b-[40px] shadow-2xl relative overflow-hidden">
+                {/* Background Decoration (Subtle) */}
+                <div className="absolute top-[-50px] right-[-50px] h-40 w-40 rounded-full bg-white/10 blur-3xl"></div>
+
+                <div className="flex justify-between items-center max-w-7xl mx-auto relative z-10">
                     <div>
-                        <h1 className="text-2xl font-bold">দক্ষ</h1>
-                        <p className="text-sm opacity-90">
+                        <h1 className="text-3xl font-black tracking-tight md:text-4xl">দক্ষ</h1>
+                        <p className="text-xs md:text-sm opacity-80 mt-1 font-medium">
                             আপনার বিশ্বস্ত স্থানীয় সেবা মাধ্যম
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
+                        {/* Provider Mode Toggle: Supporting Orange (#FF9F4B) Accent */}
                         <Link
                             to="/dokkho/provider/dashboard"
-                            className="relative p-[1.5px] overflow-hidden rounded-full inline-block group shadow-lg"
+                            className="relative p-[2px] overflow-hidden rounded-full inline-block group shadow-xl transition-transform active:scale-95"
                         >
-                            {/* Animated Shimmer Border - Gold/White Glow */}
-                            <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#F59E0B_0%,#FFF_50%,#F59E0B_100%)]" />
-
-                            {/* Inner Button Content */}
-                            <div className="relative px-4 py-1.5  rounded-full text-[10px] md:text-xs font-bold text-black flex items-center gap-2 transition-all duration-300">
+                            <span className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FF9F4B_0%,#FFFFFF_50%,#FF9F4B_100%)]" />
+                            <div className="relative px-4 py-2 bg-white rounded-full text-[10px] md:text-xs font-extrabold text-[#2C2B2B] uppercase tracking-wider">
                                 প্রোভাইডার মোড
                             </div>
                         </Link>
-                        <Link to="/dokkho/customer/profile">
-                            <FaRegUserCircle size={28} />
+
+                        <Link to="/dokkho/customer/profile" className="hover:text-[#FF9F4B] transition-colors">
+                            <FaRegUserCircle size={32} />
                         </Link>
                     </div>
                 </div>
 
-                {/* Location */}
-                <div className="max-w-7xl mx-auto mt-8">
-                    <div className="bg-white/20 rounded-xl p-3 flex items-center gap-3">
-                        <MdLocationOn size={22} />
+                {/* Location Bar: Glassmorphism Style */}
+                <div className="max-w-7xl mx-auto mt-10 relative z-10">
+                    <div className="bg-white/15 backdrop-blur-md rounded-2xl p-4 flex items-center gap-3 border border-white/20 shadow-inner">
+                        <div className="bg-white/20 p-2 rounded-lg">
+                            <MdLocationOn size={24} className="text-white" />
+                        </div>
                         <div>
-                            <p className="text-xs font-bold">বর্তমান অবস্থান</p>
-                            <p className="text-sm">{locationName}</p>
+                            <p className="text-[10px] uppercase tracking-widest font-bold opacity-70">বর্তমান অবস্থান</p>
+                            <p className="text-sm md:text-base font-semibold truncate">{locationName || "অবস্থান লোড হচ্ছে..."}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Content */}
-            <div className="max-w-7xl mx-auto px-8 -mt-6">
-                {/* Search */}
-                <div className="relative shadow-sm">
-                    <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-xl text-gray-400" />
+            {/* Main Content Area */}
+            <div className="max-w-7xl mx-auto px-6 md:px-12 -mt-10 relative z-20">
+
+                {/* Search Bar: Clean with Primary Blue Focus */}
+                <div className="relative group">
+                    <IoSearchOutline className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-gray-400 group-focus-within:text-[#4169E1] transition-colors" />
                     <input
                         type="text"
                         placeholder="প্রয়োজনীয় সেবাটি খুঁজুন..."
-                        className="w-full pl-12 py-4 rounded-xl shadow-lg focus:ring-2 bg-white focus:ring-emerald-500 outline-none"
+                        className="w-full pl-14 pr-6 py-5 rounded-2xl shadow-xl bg-white focus:ring-4 focus:ring-[#4169E1]/10 border-none outline-none text-[#2C2B2B] text-lg transition-all"
                     />
                 </div>
 
-                {/* Popular Services */}
-                <div className="mt-10">
-                    <h2 className="text-xl font-bold border-l-4 border-[#0FA958] pl-3 mb-6">
-                        জনপ্রিয় সেবাসমূহ
-                    </h2>
+                {/* Popular Services Section */}
+                <div className="mt-12 mb-20">
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="text-2xl font-extrabold text-[#2C2B2B] border-l-8 border-[#008B9C] pl-4">
+                            জনপ্রিয় সেবাসমূহ
+                        </h2>
+                        <button className="text-[#4169E1] font-bold text-sm hover:underline">সবগুলো দেখুন</button>
+                    </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+                    {/* Service Grid: Mobile 2 cols, Tablet 3, Desktop 4 */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
                         {services.map((service) => {
                             const Icon = service.icon;
                             return (
                                 <div
                                     key={service.key}
-                                    onClick={() =>
-                                        navigate(`/dokkho/customer/services/${service.key}`)
-                                    }
-                                    className="cursor-pointer bg-white rounded-2xl p-6 lg:p-8 flex flex-col items-center gap-4 shadow hover:shadow-md transition border border-gray-50"
+                                    onClick={() => navigate(`/dokkho/customer/services/${service.key}`)}
+                                    className="group cursor-pointer bg-white rounded-[32px] p-6 flex flex-col items-center gap-5 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100"
                                 >
-                                    <div
-                                        className={`w-14 h-14 lg:w-16 lg:h-16 rounded-full ${service.bg} flex items-center justify-center text-2xl ${service.color}`}
+                                    {/* Icon Container with Supporting Colors */}
+                                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center text-3xl transition-transform group-hover:rotate-12 duration-300
+                                        ${service.key === 'electrician' ? 'bg-[#FF9F4B]/10 text-[#FF9F4B]' :
+                                            service.key === 'plumber' ? 'bg-[#008B9C]/10 text-[#008B9C]' :
+                                                'bg-[#4169E1]/10 text-[#4169E1]'}`}
                                     >
                                         <Icon />
                                     </div>
-                                    <span className="font-bold text-gray-700 text-sm lg:text-base text-center">
-                                        {service.name}
-                                    </span>
+
+                                    <div className="text-center">
+                                        <span className="font-bold text-[#2C2B2B] text-base md:text-lg block group-hover:text-[#4169E1] transition-colors">
+                                            {service.name}
+                                        </span>
+                                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-tighter mt-1 block">
+                                            সেবা নিন এখনই
+                                        </span>
+                                    </div>
                                 </div>
                             );
                         })}
                     </div>
                 </div>
             </div>
+
+            {/* Bottom Navigation for Mobile (Optional but recommended) */}
+            
         </div>
     );
 };

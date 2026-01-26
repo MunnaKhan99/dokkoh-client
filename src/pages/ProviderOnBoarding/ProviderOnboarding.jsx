@@ -230,115 +230,99 @@ const ProviderOnboarding = () => {
             <div className="w-full max-w-3xl bg-white rounded-xl p-10 shadow">
 
                 {/* ---------- Progress ---------- */}
-                <p className="text-sm text-gray-500 mb-2">Step {step} of 3</p>
-                <div className="flex gap-2 mb-8">
-                    {[1, 2, 3].map((s) => (
-                        <div
-                            key={s}
-                            className={`h-2 flex-1 rounded-full ${s <= step ? "bg-green-500" : "bg-gray-200"
-                                }`}
-                        />
-                    ))}
+                <div className="mb-10">
+                    <div className="flex justify-between items-end mb-3">
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-600">ধাপ {step}/৩</h3>
+                        <p className="text-xs text-slate-400 font-medium">সম্পূর্ণ করুন: {Math.round((step / 3) * 100)}%</p>
+                    </div>
+                    <div className="flex gap-3">
+                        {[1, 2, 3].map((s) => (
+                            <div
+                                key={s}
+                                className={`h-2.5 flex-1 rounded-full transition-all duration-500 ${s <= step ? "bg-emerald-500 shadow-sm shadow-emerald-200" : "bg-slate-100"
+                                    }`}
+                            />
+                        ))}
+                    </div>
                 </div>
 
                 {/* ---------- STEP 1 ---------- */}
                 {step === 1 && (
-                    <>
-                        <label className="block mb-2 font-medium">
-                            আপনার নাম লিখুন
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <label className="block mb-3 text-sm font-semibold text-slate-700 uppercase tracking-tight">
+                            আপনার নাম
                         </label>
-
                         <input
                             type="text"
-                            placeholder="আপনার নাম"
+                            placeholder="পুরো নাম লিখুন"
                             value={providerData.name}
-                            onChange={(e) =>
-                                setProviderData({
-                                    ...providerData,
-                                    name: e.target.value,
-                                })
-                            }
-                            className="w-full border rounded-xl p-4 mb-6"
+                            onChange={(e) => setProviderData({ ...providerData, name: e.target.value })}
+                            className="w-full border border-slate-200 rounded-xl p-4 mb-8 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none transition-all placeholder:text-slate-300 text-slate-700"
                         />
 
-                        <h2 className="text-2xl font-semibold mb-2">
-                            আপনি কোন ধরনের সেবা দেন?
-                        </h2>
-                        <p className="text-gray-500 mb-8">
-                            আপনার প্রধান সেবার ধরন নির্বাচন করুন
-                        </p>
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">আপনি কোন ধরনের সেবা দেন?</h2>
+                        <p className="text-slate-500 mb-8">আপনার প্রধান দক্ষতার ক্ষেত্রটি নির্বাচন করুন</p>
 
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
                             {services.map((item) => (
                                 <div
                                     key={item.id}
-                                    onClick={() =>
-                                        setProviderData({ ...providerData, service: item.id })
-                                    }
-                                    className={`cursor-pointer border rounded-xl h-40 flex flex-col items-center justify-center gap-4
-                    ${providerData.service === item.id
-                                            ? "border-green-500 bg-green-50"
-                                            : "border-gray-200"
+                                    onClick={() => setProviderData({ ...providerData, service: item.id })}
+                                    className={`group cursor-pointer border-2 rounded-2xl p-6 flex flex-col items-center gap-3 transition-all duration-200 hover:scale-[1.02]
+                                ${providerData.service === item.id
+                                            ? "border-emerald-500 bg-emerald-50/50 ring-4 ring-emerald-50"
+                                            : "border-slate-100 bg-white hover:border-slate-200 hover:shadow-md"
                                         }`}
                                 >
-                                    <div className="text-3xl text-green-500">
+                                    <div className={`text-4xl transition-transform duration-300 group-hover:scale-110 ${providerData.service === item.id ? "text-emerald-600" : "text-slate-400"}`}>
                                         {item.icon}
                                     </div>
-                                    <p className="font-medium">{item.label}</p>
+                                    <p className={`font-bold ${providerData.service === item.id ? "text-emerald-700" : "text-slate-600"}`}>
+                                        {item.label}
+                                    </p>
                                 </div>
                             ))}
                         </div>
-                        <h2 className="text-2xl font-semibold mt-12 mb-2">
-                            আপনার কত বছরের অভিজ্ঞতা?
-                        </h2>
-                        <p className="text-gray-500 mb-8">
-                            আপনার মোট কাজের অভিজ্ঞতা নির্বাচন করুন
-                        </p>
 
-                        <div className="grid grid-cols-2 gap-6">
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2 border-t pt-8">কাজের অভিজ্ঞতা</h2>
+                        <p className="text-slate-500 mb-6">আপনার মোট অভিজ্ঞতার সময়কাল নির্বাচন করুন</p>
+
+                        <div className="grid grid-cols-2 gap-4">
                             {experiences.map((item) => (
                                 <div
                                     key={item.id}
-                                    onClick={() =>
-                                        setProviderData({
-                                            ...providerData,
-                                            experience: item.id,
-                                        })
-                                    }
-
-                                    className={`cursor-pointer border rounded-xl h-24 flex items-center justify-center
-                ${providerData.experience === item.id
-                                            ? "border-green-500 bg-green-50"
-                                            : "border-gray-200"
+                                    onClick={() => setProviderData({ ...providerData, experience: item.id })}
+                                    className={`cursor-pointer border-2 rounded-xl py-4 px-2 text-center transition-all
+                                ${providerData.experience === item.id
+                                            ? "border-emerald-500 bg-emerald-600 text-white shadow-lg shadow-emerald-200"
+                                            : "border-slate-100 text-slate-600 hover:border-slate-200"
                                         }`}
                                 >
-                                    <p className="font-medium">{item.label}</p>
+                                    <p className="font-semibold text-sm">{item.label}</p>
                                 </div>
                             ))}
                         </div>
-
 
                         <button
                             disabled={!providerData.service || !providerData.name || !providerData.experience}
                             onClick={nextStep}
-                            className="mt-10 w-full bg-green-500 text-white py-4 rounded-xl disabled:opacity-50"
+                            className="mt-12 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-emerald-100 transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             এগিয়ে যান
                         </button>
-                    </>
+                    </div>
                 )}
-
                 {/* ---------- STEP 2 ---------- */}
                 {step === 2 && (
                     <>
-                        <h2 className="text-2xl font-semibold mb-2">
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">
                             আপনি সাধারণত কোথায় কাজ করেন?
                         </h2>
-                        <p className="text-gray-500 mb-8">
+                        <p className="text-slate-500 mb-8">
                             আপনার কাজের এলাকা নির্বাচন করুন
                         </p>
 
-                        {/* অটো লোকেশন বাটন */}
+                        {/* অটো লোকেশন বাটন - থিম অনুযায়ী কালার আপডেট */}
                         <button
                             type="button"
                             onClick={async () => {
@@ -370,31 +354,31 @@ const ProviderOnboarding = () => {
 
                                                 Swal.fire({
                                                     icon: "success",
-                                                    title: "লোকেশন সনাক্ত হয়েছে",
+                                                    title: "লোকেশন সনাক্ত হয়েছে",
                                                     text: `${detectedSub} (${parentArea})`,
                                                 });
                                             } else {
                                                 Swal.fire({
                                                     icon: "warning",
-                                                    title: "এলাকা সনাক্ত হয়নি",
-                                                    text: "দয়া করে ম্যানুয়ালি এলাকা নির্বাচন করুন",
+                                                    title: "এলাকা সনাক্ত হয়নি",
+                                                    text: "দয়া করে ম্যানুয়ালি এলাকা নির্বাচন করুন",
                                                 });
                                             }
-                                            // Swal ব্যবহার করলে দেখতে আরও সুন্দর লাগবে
                                             alert(`সনাক্ত করা এলাকা: ${detectedArea}`);
                                         }
                                     } catch (error) {
-                                        alert("লোকেশন খুঁজে পাওয়া যায়নি।");
+                                        alert("লোকেশন খুঁজে পাওয়া যায়নি।");
                                     }
                                 });
                             }}
-                            className="w-full mb-4 py-3 px-4 bg-blue-50 border border-blue-200 text-blue-600 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-100 transition"
+                            className="w-full mb-6 py-4 px-4 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-100 transition-all font-medium"
                         >
-                            <MdLocationOn /> বর্তমান লোকেশন ব্যবহার করুন
+                            <MdLocationOn className="text-xl" /> বর্তমান লোকেশন ব্যবহার করুন
                         </button>
 
+                        {/* ড্রপডাউন সিলেক্ট - ফোকাস কালার আপডেট */}
                         <select
-                            className="w-full border rounded-xl p-4 mb-4 focus:ring-2 focus:ring-green-500 outline-none"
+                            className="w-full border border-slate-200 rounded-xl p-4 mb-6 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none bg-white text-slate-700 transition-all"
                             value={providerData.locationParent}
                             onChange={(e) =>
                                 setProviderData({
@@ -404,7 +388,6 @@ const ProviderOnboarding = () => {
                             }
                         >
                             <option value="">এরিয়া নির্বাচন করুন</option>
-
                             {PARENT_AREAS.map((area) => (
                                 <option key={area.key} value={area.key}>
                                     {area.label}
@@ -412,12 +395,11 @@ const ProviderOnboarding = () => {
                             ))}
                         </select>
 
-
-                        {/* আপনার কোডে এই অংশটি ইনকমপ্লিট ছিল, এটি যোগ করে দিলাম */}
-                        <label className="flex items-center gap-2 mb-8 cursor-pointer select-none">
+                        {/* চেকবক্স - এক্সেন্ট কালার আপডেট */}
+                        <label className="flex items-center gap-3 mb-10 cursor-pointer select-none group">
                             <input
                                 type="checkbox"
-                                className="w-5 h-5 accent-green-500 rounded"
+                                className="w-5 h-5 accent-emerald-600 rounded cursor-pointer"
                                 checked={providerData.areaOnly || false}
                                 onChange={(e) =>
                                     setProviderData({
@@ -426,20 +408,21 @@ const ProviderOnboarding = () => {
                                     })
                                 }
                             />
-                            <span className="text-gray-700">আমি শুধু এই এলাকাতেই কাজ করি</span>
+                            <span className="text-slate-600 group-hover:text-slate-800 transition-colors">আমি শুধু এই এলাকাতেই কাজ করি</span>
                         </label>
 
+                        {/* নেভিগেশন বাটন - কালার আপডেট */}
                         <div className="flex gap-4">
                             <button
                                 onClick={prevStep}
-                                className="w-1/2 border py-4 rounded-xl hover:bg-gray-50 transition"
+                                className="w-1/2 border border-slate-200 text-slate-600 py-4 rounded-xl hover:bg-slate-50 transition-all font-medium"
                             >
                                 পেছনে
                             </button>
                             <button
                                 disabled={!providerData.locationParent}
                                 onClick={nextStep}
-                                className="w-1/2 bg-green-500 text-white py-4 rounded-xl disabled:opacity-50 hover:bg-green-600 transition font-medium"
+                                className="w-1/2 bg-emerald-600 text-white py-4 rounded-xl disabled:opacity-30 hover:bg-emerald-700 transition-all font-bold shadow-lg shadow-emerald-100"
                             >
                                 এগিয়ে যান
                             </button>
@@ -449,53 +432,59 @@ const ProviderOnboarding = () => {
 
                 {/* ---------- STEP 3 ---------- */}
                 {step === 3 && (
-                    <>
-                        <h2 className="text-2xl font-semibold mb-2">
-                            গ্রাহকরা কীভাবে আপনার সাথে যোগাযোগ করবে?
-                        </h2>
-                        <p className="text-gray-500 mb-8">
-                            যোগাযোগের মাধ্যম নির্বাচন করুন
-                        </p>
-
-                        <div
-                            onClick={() => toggleContact("phone")}
-                            className={`border rounded-xl p-4 flex items-center gap-4 cursor-pointer mb-4
-                ${providerData.contact.phone
-                                    ? "border-green-500 bg-green-50"
-                                    : "border-gray-200"
-                                }`}
-                        >
-                            <FaPhoneAlt className="text-green-500" />
-                            ফোন কল
+                    <div className="animate-in fade-in slide-in-from-right-4 duration-500 text-center">
+                        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <FaPhoneAlt className="text-3xl" />
                         </div>
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">যোগাযোগের মাধ্যম</h2>
+                        <p className="text-slate-500 mb-8">গ্রাহকরা কীভাবে আপনার সাথে যোগাযোগ করবে?</p>
 
-                        <div
-                            onClick={() => toggleContact("whatsapp")}
-                            className={`border rounded-xl p-4 flex items-center gap-4 cursor-pointer mb-6
-                ${providerData.contact.whatsapp
-                                    ? "border-green-500 bg-green-50"
-                                    : "border-gray-200"
-                                }`}
-                        >
-                            <FaWhatsapp className="text-green-500" />
-                            হোয়াটসঅ্যাপ
+                        <div className="space-y-4 mb-10">
+                            <div
+                                onClick={() => toggleContact("phone")}
+                                className={`group border-2 rounded-2xl p-5 flex items-center justify-between cursor-pointer transition-all
+                            ${providerData.contact.phone ? "border-emerald-500 bg-emerald-50/30 ring-4 ring-emerald-50" : "border-slate-100 hover:border-slate-200"}`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-3 rounded-xl ${providerData.contact.phone ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-400"}`}>
+                                        <FaPhoneAlt />
+                                    </div>
+                                    <span className={`font-bold ${providerData.contact.phone ? "text-emerald-700" : "text-slate-600"}`}>সরাসরি ফোন কল</span>
+                                </div>
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${providerData.contact.phone ? "border-emerald-500 bg-emerald-500" : "border-slate-200"}`}>
+                                    {providerData.contact.phone && <div className="w-2 h-2 bg-white rounded-full" />}
+                                </div>
+                            </div>
+
+                            <div
+                                onClick={() => toggleContact("whatsapp")}
+                                className={`group border-2 rounded-2xl p-5 flex items-center justify-between cursor-pointer transition-all
+                            ${providerData.contact.whatsapp ? "border-emerald-500 bg-emerald-50/30 ring-4 ring-emerald-50" : "border-slate-100 hover:border-slate-200"}`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-3 rounded-xl ${providerData.contact.whatsapp ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-400"}`}>
+                                        <FaWhatsapp className="text-xl" />
+                                    </div>
+                                    <span className={`font-bold ${providerData.contact.whatsapp ? "text-emerald-700" : "text-slate-600"}`}>ওয়াটসঅ্যাপ মেসেজ</span>
+                                </div>
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${providerData.contact.whatsapp ? "border-emerald-500 bg-emerald-500" : "border-slate-200"}`}>
+                                    {providerData.contact.whatsapp && <div className="w-2 h-2 bg-white rounded-full" />}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="flex gap-4">
-                            <button
-                                onClick={prevStep}
-                                className="w-1/2 border py-4 rounded-xl"
-                            >
+                            <button onClick={prevStep} className="flex-1 border-2 border-slate-100 py-4 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-all">
                                 পেছনে
                             </button>
                             <button
                                 onClick={handleComplete}
-                                className="w-full bg-green-500 text-white py-4 rounded-xl"
+                                className="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-bold shadow-lg shadow-emerald-100 transition-all active:scale-[0.98]"
                             >
                                 সেটআপ সম্পন্ন করুন
                             </button>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </div>
