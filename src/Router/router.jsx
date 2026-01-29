@@ -1,17 +1,21 @@
 import { createBrowserRouter } from "react-router";
-import RootLayout from '../Layout/RootLayout'
+
 import PhoneLogin from "../pages/PhoneLogin/PhoneLogin";
-import Home from "../pages/Home/Home";
+import Home from '../pages/Home/Home'
 import VerifyOtp from "../pages/VerifyOtp/VerifyOtp";
 import RoleSelect from "../pages/UserRole/RoleSelect";
-import ProviderOnboarding from "../pages/ProviderOnBoarding/ProviderOnboarding";
-import ProviderDashboard from "../pages/ProviderDashboard/ProviderDashboard ";
-import ProviderProfile from "../pages/ProviderProfile/ProviderProfile";
-import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import CustomerLayout from "../Layout/CustomerLayout";
 import CustomerDashboard from "../pages/CustomerProfile/CustomerDashborad";
 import CustomerProfile from "../pages/CustomerProfile/CustomerProfile";
 import ServiceList from "../pages/CustomerProfile/ServiceList";
+import ProviderLayout from "../Layout/ProviderLayout";
+import ProviderOnboarding from "../pages/ProviderOnBoarding/ProviderOnboarding";
+import ProviderDashboard from "../pages/ProviderDashboard/ProviderDashboard ";
+import ProviderProfile from "../pages/ProviderProfile/ProviderProfile";
 import ProviderDetails from "../pages/ProviderDetails/ProviderDetails";
+import RootLayout from "../Layout/RootLayout";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -21,18 +25,56 @@ const router = createBrowserRouter([
 
             { path: "/dokkho/login", element: <PhoneLogin /> },
             { path: "/dokkho/verify-otp", element: <VerifyOtp /> },
-            { path: "/dokkho/role", element: <PrivateRoute><RoleSelect /></PrivateRoute> },
+            {
+                path: "/dokkho/role",
+                element: (
+                    <PrivateRoute>
+                        <RoleSelect />
+                    </PrivateRoute>
+                ),
+            },
 
-            { path: "/dokkho/provider/onboarding", element: <PrivateRoute><ProviderOnboarding /></PrivateRoute> },
-            { path: "/dokkho/provider/dashboard", element: <PrivateRoute><ProviderDashboard /></PrivateRoute> },
-            { path: "/dokkho/provider/profile", element: <PrivateRoute><ProviderProfile /></PrivateRoute> },
+            /* ================= CUSTOMER ================= */
+            {
+                path: "/dokkho/customer",
+                element: (
+                    <PrivateRoute>
+                        <CustomerLayout />
+                    </PrivateRoute>
+                ),
+                children: [
+                    { path: "dashboard", element: <CustomerDashboard /> },
+                    { path: "profile", element: <CustomerProfile /> },
+                    { path: "services/:serviceKey", element: <ServiceList /> },
+                ],
+            },
 
-            { path: "/dokkho/customer/dashboard", element: <PrivateRoute><CustomerDashboard /></PrivateRoute> },
-            { path: "/dokkho/customer/profile", element: <PrivateRoute><CustomerProfile /></PrivateRoute> },
-            { path: "/dokkho/customer/services/:serviceKey", element: <PrivateRoute><ServiceList></ServiceList></PrivateRoute> },
+            /* ================= PROVIDER ================= */
+            {
+                path: "/dokkho/provider",
+                element: (
+                    <PrivateRoute>
+                        <ProviderLayout />
+                    </PrivateRoute>
+                ),
+                children: [
+                    { path: "onboarding", element: <ProviderOnboarding /> },
+                    { path: "dashboard", element: <ProviderDashboard /> },
+                    { path: "profile", element: <ProviderProfile /> },
+                ],
+            },
 
-            { path: "/dokkho/provider/:providerId", element: <PrivateRoute><ProviderDetails></ProviderDetails></PrivateRoute> }
+            /* provider public profile */
+            {
+                path: "/dokkho/provider/:providerId",
+                element: (
+                    <PrivateRoute>
+                        <ProviderDetails />
+                    </PrivateRoute>
+                ),
+            },
         ],
     },
 ]);
-export default router
+
+export default router;

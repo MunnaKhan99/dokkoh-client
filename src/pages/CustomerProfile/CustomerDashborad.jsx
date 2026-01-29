@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
     FaBolt,
@@ -8,8 +8,8 @@ import {
 } from "react-icons/fa";
 import { IoSearchOutline, IoBookOutline } from "react-icons/io5";
 import { MdLocationOn } from "react-icons/md";
-import { dokkhoContext } from "../../Layout/RootLayout";
 import axios from "axios";
+import { CustomerContext } from "../../Layout/CustomerLayout";
 const services = [
     {
         key: "electrician",
@@ -135,7 +135,7 @@ const AREA_PARENT_MAP = {
 };
 
 const CustomerDashboard = () => {
-    const { setCustomerParentArea } = useContext(dokkhoContext);
+    const { setCustomerParentArea } = useContext(CustomerContext);
     const navigate = useNavigate();
     const [locationName, setLocationName] = useState("লোকেশন নেওয়া হচ্ছে...");
 
@@ -168,6 +168,16 @@ const CustomerDashboard = () => {
             () => setCustomerParentArea(null)
         );
     }, []);
+    const carouselRef = useRef(null);
+
+    const scrollCarousel = (dir) => {
+        if (!carouselRef.current) return;
+        const amount = dir === "left" ? -140 : 140;
+        carouselRef.current.scrollBy({
+            left: amount,
+            behavior: "smooth",
+        });
+    }
 
 
     return (
@@ -179,13 +189,13 @@ const CustomerDashboard = () => {
 
                 <div className="flex justify-between items-center max-w-7xl mx-auto relative z-10">
                     <div>
-                        <h1 className="text-3xl font-black tracking-tight md:text-4xl">দক্ষ</h1>
+                        <h1 className="text-3xl font-black tracking-tight md:text-4xl sm:text-2xl">দক্ষ</h1>
                         <p className="text-xs md:text-sm opacity-80 mt-1 font-medium">
                             আপনার বিশ্বস্ত স্থানীয় সেবা মাধ্যম
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="hidden md:flex items-center gap-4">
                         {/* Provider Mode Toggle: Supporting Orange (#FF9F4B) Accent */}
                         <Link
                             to="/dokkho/provider/dashboard"
@@ -236,24 +246,89 @@ const CustomerDashboard = () => {
                         <h2 className="text-2xl font-extrabold text-[#2C2B2B] border-l-8 border-[#008B9C] pl-4">
                             জনপ্রিয় সেবাসমূহ
                         </h2>
-                        <button className="text-[#4169E1] font-bold text-sm hover:underline">সবগুলো দেখুন</button>
+                        <button className="text-[#4169E1] font-bold text-sm hover:underline md:flex hidden">সবগুলো দেখুন</button>
                     </div>
 
                     {/* Service Grid: Mobile 2 cols, Tablet 3, Desktop 4 */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
+                    {/* ===== MOBILE CAROUSEL ===== */}
+                    {/* ===== MOBILE CAROUSEL (NO SCROLLBAR + ARROWS) ===== */}
+                    <div className="md:hidden relative -mx-6 px-6 border-2">
+
+                        {/* LEFT ARROW */}
+                        <button
+                            onClick={() => scrollCarousel("left")}
+                            className="absolute left-0 top-3/7 -translate-y-1/2 z-10 h-8 w-8  flex items-center justify-center text-gray-900 active:scale-95"
+                        >
+                            &lt;
+                        </button>
+
+                        {/* RIGHT ARROW */}
+                        <button
+                            onClick={() => scrollCarousel("right")}
+                            className="absolute right-0 top-3/7 -translate-y-1/2 z-10 h-8 w-8  flex items-center justify-center text-gray-900 active:scale-95"
+                        >
+                            &gt;
+                        </button>
+
+                        {/* SCROLL CONTAINER */}
+                        <div
+                            ref={carouselRef}
+                            className="flex gap-4  overflow-x-auto scroll-smooth scrollbar-hide py-2"
+                        >
+                            {services.map((service) => {
+                                const Icon = service.icon;
+                                return (
+                                    <div
+                                        key={service.key}
+                                        onClick={() =>
+                                            navigate(`/dokkho/customer/services/${service.key}`)
+                                        }
+                                        className="shrink-0 w-20 flex flex-col items-center gap-2 cursor-pointer"
+                                    >
+                                        {/* CIRCULAR ICON */}
+                                        <div
+                                            className={`w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-sm active:scale-95
+                        ${service.key === "electrician"
+                                                    ? "bg-[#FF9F4B]/15 text-[#FF9F4B]"
+                                                    : service.key === "plumber"
+                                                        ? "bg-[#008B9C]/15 text-[#008B9C]"
+                                                        : "bg-[#4169E1]/15 text-[#4169E1]"
+                                                }`}
+                                        >
+                                            <Icon />
+                                        </div>
+
+                                        {/* LABEL */}
+                                        <span className="text-[10px] font-bold text-[#2C2B2B] text-center leading-tight">
+                                            {service.name}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+
+                    {/* ===== DESKTOP / TABLET GRID ===== */}
+                    <div className="hidden md:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
                         {services.map((service) => {
                             const Icon = service.icon;
                             return (
                                 <div
                                     key={service.key}
-                                    onClick={() => navigate(`/dokkho/customer/services/${service.key}`)}
+                                    onClick={() =>
+                                        navigate(`/dokkho/customer/services/${service.key}`)
+                                    }
                                     className="group cursor-pointer bg-white rounded-[32px] p-6 flex flex-col items-center gap-5 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100"
                                 >
-                                    {/* Icon Container with Supporting Colors */}
-                                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center text-3xl transition-transform group-hover:rotate-12 duration-300
-                                        ${service.key === 'electrician' ? 'bg-[#FF9F4B]/10 text-[#FF9F4B]' :
-                                            service.key === 'plumber' ? 'bg-[#008B9C]/10 text-[#008B9C]' :
-                                                'bg-[#4169E1]/10 text-[#4169E1]'}`}
+                                    <div
+                                        className={`w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center text-3xl transition-transform group-hover:rotate-12 duration-300
+                    ${service.key === "electrician"
+                                                ? "bg-[#FF9F4B]/10 text-[#FF9F4B]"
+                                                : service.key === "plumber"
+                                                    ? "bg-[#008B9C]/10 text-[#008B9C]"
+                                                    : "bg-[#4169E1]/10 text-[#4169E1]"
+                                            }`}
                                     >
                                         <Icon />
                                     </div>
@@ -270,11 +345,12 @@ const CustomerDashboard = () => {
                             );
                         })}
                     </div>
+
                 </div>
             </div>
 
             {/* Bottom Navigation for Mobile (Optional but recommended) */}
-            
+
         </div>
     );
 };

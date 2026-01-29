@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { dokkhoContext } from "../Layout/RootLayout";
+import { AuthContext } from "../Layout/RootLayout";
 import { Navigate } from "react-router";
 
 const PrivateRoute = ({ children }) => {
-    const { user, loading } = useContext(dokkhoContext);
+    const { user, loading } = useContext(AuthContext);
 
     // Firebase auth resolve হওয়া পর্যন্ত অপেক্ষা
     if (loading) {

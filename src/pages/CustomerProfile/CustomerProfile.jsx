@@ -7,10 +7,10 @@ import {
     FaArrowLeft,
     FaUserCircle,
 } from "react-icons/fa";
-import { dokkhoContext } from "../../Layout/RootLayout";
+import { AuthContext } from "../../Layout/RootLayout";
 
 const CustomerProfile = () => {
-    const { user, role, logout, loading } = useContext(dokkhoContext);
+    const { role, user, loading, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     if (loading) return (

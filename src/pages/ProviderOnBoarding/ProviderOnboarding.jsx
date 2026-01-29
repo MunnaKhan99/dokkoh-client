@@ -7,14 +7,14 @@ import {
     FaPhoneAlt,
     FaWhatsapp,
 } from "react-icons/fa";
-import { dokkhoContext } from "../../Layout/RootLayout";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import { MdLocationOn } from "react-icons/md";
 import axios from "axios";
+import { ProviderContext } from "../../Layout/ProviderLayout";
 
 const ProviderOnboarding = () => {
-    const { providerData, setProviderData, submitProviderOnboarding } = useContext(dokkhoContext);
+    const { providerData, setProviderData, submitProviderOnboarding } = useContext(ProviderContext);
     const [step, setStep] = useState(1);
     // const [locationName, setLocationName] = useState("লোকেশন নেওয়া হচ্ছে...");
     const navigate = useNavigate()

@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { dokkhoContext } from "../../Layout/RootLayout";
 import {
     FaStar,
     FaMapMarkerAlt,
@@ -7,24 +6,28 @@ import {
     FaCamera,
     FaArrowLeft,
     FaArrowRight,
+    FaRegUserCircle,
 } from "react-icons/fa";
 import { MdEditNote } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
+import { ProviderContext } from "../../Layout/ProviderLayout";
+import NoProvider from "../NoProvider/NoProvider";
 
 const ProviderDashboard = () => {
     const navigate = useNavigate()
     const {
         provider,
-        providerLoading,
+        checkingProvider,
         toggleProviderAvailability,
-    } = useContext(dokkhoContext);
+    } = useContext(ProviderContext);
+
     console.log(provider);
-    if (providerLoading) {
-        return <p className="p-10">Loading...</p>;
+    if (checkingProvider) {
+        return <p className="flex justify-center h-screen"><span className="loading loading-spinner loading-xl"></span></p>;
     }
 
     if (!provider) {
-        return <p className="p-10">No provider data found</p>;
+        return <NoProvider />;
     }
 
     return (
@@ -45,7 +48,7 @@ const ProviderDashboard = () => {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-3">
                         {/* Customer Mode Toggle: Shimmer Effect with Orange (#FF9F4B) */}
                         <Link
                             to="/dokkho/customer/dashboard"
@@ -57,9 +60,9 @@ const ProviderDashboard = () => {
                             </div>
                         </Link>
 
-                        <Link to="/dokkho/provider/profile" className="p-2 border-2 border-white/30 rounded-full hover:bg-white/20 transition-all">
-                            <FaUser className="text-lg md:text-xl" />
-                        </Link>
+                        <button onClick={() => { navigate('/dokkho/provider/profile') }} className="hover:text-[#FF9F4B] transition-colors">
+                            <FaRegUserCircle size={32} />
+                        </button>
                     </div>
                 </div>
             </div>

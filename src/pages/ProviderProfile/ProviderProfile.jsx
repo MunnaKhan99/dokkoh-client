@@ -7,14 +7,15 @@ import {
     FaArrowLeft,
 } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import { dokkhoContext } from "../../Layout/RootLayout";
+import { ProviderContext } from "../../Layout/ProviderLayout";
+import { AuthContext } from "../../Layout/RootLayout";
 
 const ProviderProfile = () => {
     const navigate = useNavigate();
-    const { user, provider, providerLoading, logout } = useContext(dokkhoContext);
-
+    const { provider, checkingProvider, } = useContext(ProviderContext)
+    const { user, logout } = useContext(AuthContext);
     // লোডিং স্টেট (ব্র্যান্ড কালার স্পিনার সহ)
-    if (providerLoading) {
+    if (checkingProvider) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-white">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#4169E1] border-t-transparent"></div>
@@ -106,15 +107,27 @@ const ProviderProfile = () => {
                     />
 
                     {/* একটি এক্সট্রা কার্ড স্ট্যাটাসের জন্য */}
-                    <div className="bg-white p-5 rounded-2xl border border-gray-50 shadow-sm flex items-center gap-4">
-                        <div className="bg-green-50 text-green-600 p-4 rounded-2xl">
-                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                        </div>
-                        <div>
-                            <p className="text-[10px] uppercase font-black text-gray-400">অ্যাকাউন্ট স্ট্যাটাস</p>
-                            <p className="text-[#2C2B2B] font-bold">অ্যাক্টিভ</p>
-                        </div>
-                    </div>
+                    {
+                        provider.availability ? <div className="bg-white p-5 rounded-2xl border border-gray-50 shadow-sm flex items-center gap-4">
+                            <div className="bg-green-50 text-green-600 p-4 rounded-2xl">
+                                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase font-black text-gray-400">অ্যাকাউন্ট স্ট্যাটাস</p>
+                                <p className="text-[#2C2B2B] font-bold">অনলাইন</p>
+                            </div>
+                        </div> :
+                            <div className="bg-white p-5 rounded-2xl border border-gray-50 shadow-sm flex items-center gap-4">
+                                <div className="bg-green-50 text-red-600 p-4 rounded-2xl">
+                                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] uppercase font-black text-gray-400">অ্যাকাউন্ট স্ট্যাটাস</p>
+                                    <p className="text-[#2C2B2B] font-bold">অফলাইন</p>
+                                </div>
+                            </div>
+                    }
+
                 </div>
 
                 {/* লগআউট বাটন: Red (#D62C49) */}

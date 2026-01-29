@@ -1,14 +1,14 @@
 import { useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router";
-import { dokkhoContext } from "../../Layout/RootLayout";
-import { FaArrowLeft, FaStar, FaPhoneAlt,FaMapMarkerAlt } from "react-icons/fa";
+import { FaArrowLeft, FaStar, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { CustomerContext } from "../../Layout/CustomerLayout";
 
 const ServiceList = () => {
     const { serviceKey } = useParams();
     console.log(serviceKey);
     const navigate = useNavigate();
-    const { providers, providersLoading, fetchProviders, customerParentArea } =
-        useContext(dokkhoContext);
+    const { providers, providersLoading, fetchProviders, customerParentArea } = useContext(CustomerContext)
+
     console.log(providers);
     console.log(customerParentArea);
     useEffect(() => {

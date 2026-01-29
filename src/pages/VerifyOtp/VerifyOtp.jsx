@@ -1,11 +1,11 @@
 import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router";
 import { LuShieldCheck } from "react-icons/lu";
-import { dokkhoContext } from "../../Layout/RootLayout";
+import { AuthContext } from "../../Layout/RootLayout";
 
 const VerifyOtp = () => {
     const navigate = useNavigate();
-    const { setUser, loading } = useContext(dokkhoContext);
+    const { setUser, loading } = useContext(AuthContext);
 
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef([]);
