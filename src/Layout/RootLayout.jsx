@@ -37,7 +37,7 @@ const RootLayout = () => {
 
     const logout = async () => {
         await signOut(auth);
-        await axios.post("http://localhost:3000/logout");
+        await axios.post("https://dokkoh-server.vercel.app/logout");
         setUser(null);
         setRole(null);
         navigate("/dokkho/login", { replace: true });

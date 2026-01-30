@@ -20,7 +20,7 @@ const ProviderDetails = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:3000/providers/${providerId}`)
+            .get(`https://dokkoh-server.vercel.app/providers/${providerId}`)
             .then((res) => {
                 setProvider(res.data);
                 setLoading(false);

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./RootLayout";
 import axios from "axios";
-import { Outlet,useLocation } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import CustomerBottomNav from "../pages/CustomerNav/CustomerBottomNav";
 
 export const CustomerContext = createContext();
@@ -38,7 +38,7 @@ const CustomerLayout = () => {
     const fetchProviders = async ({ serviceKey, locationParent } = {}) => {
         setProvidersLoading(true);
         try {
-            const res = await axios.get("http://localhost:3000/providers", {
+            const res = await axios.get("https://dokkoh-server.vercel.app/providers", {
                 params: {
                     service: serviceKey || undefined,
                     locationParent: locationParent || undefined,
@@ -58,7 +58,7 @@ const CustomerLayout = () => {
         if (!user?.uid) return;
 
         axios.patch(
-            `http://localhost:3000/users/${user.uid}/customer-role`,
+            `https://dokkoh-server.vercel.app/users/${user.uid}/customer-role`,
             { phoneNumber: user.phoneNumber }
         ).catch(err => {
             console.error("Ensure customer role failed", err);
