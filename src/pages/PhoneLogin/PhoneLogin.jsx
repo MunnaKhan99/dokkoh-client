@@ -91,9 +91,11 @@ const PhoneLogin = () => {
                             required
                         />
                     </div>
+                        <p className="text-red-700 text-2xl">টেস্ট এর জন্য নম্বরঃ 1234567890</p>
+
 
                     {/* Info Text: Supporting Teal (#008B9C) এর একটি হালকা ভাব রাখা হয়েছে */}
-                    <p className="mt-6 text-sm text-gray-400">
+                    <p className="mt-6 text-sm  text-gray-400">
                         আপনার নম্বরটি যাচাই করতে আমরা একটি <span className="text-[#008B9C] font-semibold">ওটিপি (OTP)</span> পাঠাব
                     </p>
 

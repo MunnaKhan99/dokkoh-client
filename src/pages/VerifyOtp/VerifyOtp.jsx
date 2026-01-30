@@ -89,6 +89,8 @@ const VerifyOtp = () => {
                             />
                         ))}
                     </div>
+                    <p className="text-red-700 text-2xl">টেস্ট এর জন্য ওটিপিঃ 123456</p>
+
 
                     {/* Resend OTP Section: Supporting Orange (#FF9F4B) */}
                     <p className="mt-8 text-sm text-gray-500">
