@@ -26,7 +26,7 @@ const ProviderDetails = () => {
 
     useEffect(() => {
         axios
-            .get(`${import.meta.env.VITE_BACKEND_URL}/providers/${providerId}`)
+            .get(`https://dokkoh-server.vercel.app/providers/${providerId}`)
             .then((res) => {
                 setProvider(res.data);
                 setLoading(false);
@@ -37,7 +37,7 @@ const ProviderDetails = () => {
         if (!providerId) return;
 
         axios
-            .get(`${import.meta.env.VITE_BACKEND_URL}/reviews/provider/${providerId}?limit=3`)
+            .get(`https://dokkoh-server.vercel.app/reviews/provider/${providerId}?limit=3`)
             .then(res => setReviews(res.data))
             .catch(err => console.error(err));
     }, [providerId]);
@@ -71,7 +71,7 @@ const ProviderDetails = () => {
 
         try {
             // ৩. সরাসরি URL দিয়ে আগে চেক করুন (যদি env কাজ না করে)
-            const baseUrl = import.meta.env.VITE_BACKEND_URL;
+            const baseUrl = "https://dokkoh-server.vercel.app"
 
             const res = await axios.post(
                 `${baseUrl}/reviews`,

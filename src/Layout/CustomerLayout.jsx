@@ -38,7 +38,7 @@ const CustomerLayout = () => {
     const fetchProviders = async ({ serviceKey, locationParent } = {}) => {
         setProvidersLoading(true);
         try {
-            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/providers`, {
+            const res = await axios.get("https://dokkoh-server.vercel.app/providers", {
                 params: {
                     service: serviceKey || undefined,
                     locationParent: locationParent || undefined,
@@ -58,7 +58,7 @@ const CustomerLayout = () => {
         if (!user?.uid) return;
 
         axios.patch(
-            `${import.meta.env.VITE_BACKEND_URL}/users/${user.uid}/customer-role`,
+            `https://dokkoh-server.vercel.app/users/${user.uid}/customer-role`,
             { phoneNumber: user.phoneNumber }
         ).catch(err => {
             console.error("Ensure customer role failed", err);
