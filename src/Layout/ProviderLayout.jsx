@@ -42,7 +42,7 @@ const ProviderLayout = () => {
         setCheckingProvider(true);
         try {
             const res = await axios.get(
-                `https://dokkoh-server.vercel.app/providers/by-uid/${user.uid}`
+                `${import.meta.env.VITE_BACKEND_URL}/providers/by-uid/${user.uid}`
             );
             setProvider(res.data.exists ? res.data.provider : null);
         } catch (err) {
@@ -61,7 +61,7 @@ const ProviderLayout = () => {
         const token = await user.getIdToken();
 
         const res = await axios.post(
-            "https://dokkoh-server.vercel.app/providers",
+            `${import.meta.env.VITE_BACKEND_URL}/providers`,
             {
                 user: {
                     uid: user.uid,
@@ -83,7 +83,7 @@ const ProviderLayout = () => {
         const updated = !provider.availability;
 
         await axios.patch(
-            `https://dokkoh-server.vercel.app/providers/${provider._id}/availability`,
+            `${import.meta.env.VITE_BACKEND_URL}/providers/${provider._id}/availability`,
             { availability: updated }
         );
 

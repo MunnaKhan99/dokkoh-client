@@ -15,7 +15,7 @@ const RoleSelect = () => {
         if (!user?.uid) return false;
 
         const res = await axios.get(
-            `https://dokkoh-server.vercel.app/providers/by-uid/${user.uid}`
+            `${import.meta.env.VITE_BACKEND_URL}/providers/by-uid/${user.uid}`
         );
         return res.data.exists;
     };
