@@ -147,8 +147,9 @@ const CustomerDashboard = () => {
                 try {
                     const { latitude, longitude } = pos.coords;
                     const res = await axios.get(
-                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=bn`
-                    );
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=bn`, {
+                        withCredentials: false
+                    });
 
                     const address = res.data?.address;
                     const sub =

@@ -19,8 +19,11 @@ const ProviderLayout = () => {
         experience: "",
         locationParent: "",
         locationSub: "",
-        areaOnly: false,
         contact: { phone: true, whatsapp: true },
+        profileImage: "",
+        pricing: { amount: "", unit: "hour" },
+        availabilityDays: {},
+        kyc: { front: "", back: "" },
     });
     const HIDE_BOTTOM_NAV_ROUTES = [
         "/dokkho/login",
@@ -42,7 +45,8 @@ const ProviderLayout = () => {
         setCheckingProvider(true);
         try {
             const res = await axios.get(
-                `https://dokkoh-server.vercel.app/providers/by-uid/${user.uid}`
+                `https://dokkoh-server.vercel.app/providers/by-uid/${user.uid}`,
+                { withCredentials: true }
             );
             setProvider(res.data.exists ? res.data.provider : null);
         } catch (err) {
@@ -58,10 +62,8 @@ const ProviderLayout = () => {
     }, [user]);
 
     const submitProviderOnboarding = async () => {
-        const token = await user.getIdToken();
-
         const res = await axios.post(
-            `https://dokkoh-server.vercel.app/providers`,
+            "https://dokkoh-server.vercel.app/providers",
             {
                 user: {
                     uid: user.uid,
@@ -70,11 +72,13 @@ const ProviderLayout = () => {
                 },
                 providerData,
             },
-            { headers: { Authorization: `Bearer ${token}` } }
+            {
+                withCredentials: true, // 🔐 JWT cookie পাঠানোর জন্য বাধ্যতামূলক
+            }
         );
 
         await fetchProvider();
-        return res.data
+        return res.data;
     };
 
     const toggleProviderAvailability = async () => {
