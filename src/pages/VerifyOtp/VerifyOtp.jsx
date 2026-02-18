@@ -1,29 +1,33 @@
 import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router";
-import { LuShieldCheck } from "react-icons/lu";
 import { AuthContext } from "../../Layout/RootLayout";
+import Swal from "sweetalert2";
 
 const VerifyOtp = () => {
     const navigate = useNavigate();
-    const { setUser, loading } = useContext(AuthContext);
+    const { setUser } = useContext(AuthContext);
 
+    // লোকাল স্টেট ফর প্রসেসিং
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+    const [isProcessing, setIsProcessing] = useState(false);
     const inputRefs = useRef([]);
 
-    // Handle input change + auto focus
+    // ওটিপি ইনপুট এবং অটো-ফোকাস হ্যান্ডলার
     const handleChange = (element, index) => {
-        if (isNaN(element.value)) return;
+        const value = element.value;
+        if (isNaN(value)) return;
 
         const newOtp = [...otp];
-        newOtp[index] = element.value;
+        newOtp[index] = value.substring(value.length - 1);
         setOtp(newOtp);
 
-        if (element.value && index < 5) {
+        // পরের বক্সে ফোকাস
+        if (value && index < 5) {
             inputRefs.current[index + 1].focus();
         }
     };
 
-    // Handle backspace
+    // ব্যাকস্পেস হ্যান্ডলার
     const handleKeyDown = (e, index) => {
         if (e.key === "Backspace" && !otp[index] && index > 0) {
             inputRefs.current[index - 1].focus();
@@ -32,49 +36,64 @@ const VerifyOtp = () => {
 
     const handleVerify = async (e) => {
         e.preventDefault();
+        const finalOtp = otp.join("");
+
+        if (finalOtp.length !== 6) {
+            Swal.fire({
+                icon: "warning",
+                title: "অসম্পূর্ণ ওটিপি",
+                text: "দয়া করে ৬ সংখ্যার সঠিক কোডটি দিন",
+                confirmButtonColor: "#fb7185", // rose-400
+            });
+            return;
+        }
 
         try {
-            const finalOtp = otp.join("");
+            setIsProcessing(true);
 
-            if (finalOtp.length !== 6) {
-                alert("৬ সংখ্যার OTP দিন");
-                return;
-            }
-
-
+            // Firebase Verification
             const result = await window.confirmationResult.confirm(finalOtp);
-
-
             setUser(result.user);
 
+            // সফল হলে এলার্ট দেখাবে
+            await Swal.fire({
+                icon: "success",
+                title: "সফল যাচাইকরণ!",
+                text: "আপনার ওটিপি সফলভাবে যাচাই করা হয়েছে।",
+                timer: 1500,
+                showConfirmButton: false
+            });
 
+            // এলার্ট শেষ হওয়ার পর নেভিগেট
             navigate("/dokkho/role");
+
         } catch (error) {
             console.error("OTP Verify Error:", error);
-            alert("ভুল OTP");
+            Swal.fire({
+                icon: "error",
+                title: "ভুল ওটিপি!",
+                text: "আপনার দেওয়া কোডটি সঠিক নয়। আবার চেষ্টা করুন।",
+                confirmButtonColor: "#fb7185",
+            });
+        } finally {
+            setIsProcessing(false);
         }
     };
 
     return (
-        <div className="flex min-h-screen w-full flex-col items-center justify-center bg-white px-6">
-            <div className="w-full max-w-md text-center">
+        <div className="flex min-h-screen w-full items-center justify-center bg-white px-6">
+            <div className="w-full max-w-[450px] text-center">
 
-                {/* Icon Container: Primary Blue (#4169E1) ব্যবহার করা হয়েছে */}
-                <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-[#4169E1] shadow-lg shadow-blue-200 transform rotate-3">
-                    <LuShieldCheck size={45} className="text-white" />
-                </div>
-
-                {/* Title: Neutral Dark (#2C2B2B) */}
-                <h2 className="text-2xl font-extrabold text-[#2C2B2B] md:text-3xl">
-                    ওটিপি (OTP) <span className="text-[#4169E1]">যাচাই করুন</span>
+                <h2 className="text-[26px] font-bold text-[#1A1A1A] md:text-3xl">
+                    ওটিপি যাচাই করুন
                 </h2>
-                <p className="mt-3 text-gray-500 font-medium px-4">
-                    আপনার নম্বরে পাঠানো ৬-ডিজিট কোডটি লিখুন
+
+                <p className="mt-4 text-[15px] leading-relaxed text-gray-500">
+                    আপনার নম্বরে পাঠানো ৬-সংখ্যার কোডটি লিখুন।
                 </p>
 
-                {/* OTP Inputs */}
-                <form onSubmit={handleVerify} className="mt-10">
-                    <div className="flex justify-center gap-2 md:gap-3">
+                <form onSubmit={handleVerify} className="mt-12">
+                    <div className="flex justify-center gap-2 sm:gap-3">
                         {otp.map((value, index) => (
                             <input
                                 key={index}
@@ -84,36 +103,36 @@ const VerifyOtp = () => {
                                 value={value}
                                 onChange={(e) => handleChange(e.target, index)}
                                 onKeyDown={(e) => handleKeyDown(e, index)}
-                                // Focus হলে Border Color হবে Primary Blue (#4169E1)
-                                className="h-12 w-12 md:h-14 md:w-14 rounded-2xl border-2 border-gray-100 bg-gray-50 text-center text-xl font-bold text-[#2C2B2B] focus:border-[#4169E1] focus:bg-white focus:outline-none transition-all shadow-sm"
+                                className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border border-gray-200 bg-white text-center text-xl font-semibold text-gray-800 focus:border-rose-400 focus:ring-1 focus:ring-rose-400 focus:outline-none transition-all"
                             />
                         ))}
                     </div>
-                    <p className="text-red-700 text-2xl">টেস্ট এর জন্য ওটিপিঃ 123456</p>
 
+                    <div className="mt-12">
+                        <button
+                            type="submit"
+                            disabled={isProcessing}
+                            className={`w-full rounded-xl py-3.5 text-[15px] font-semibold transition-all duration-200 active:scale-95 shadow-sm
+                        ${isProcessing
+                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                    : "bg-white border border-rose-100 text-rose-500 hover:bg-rose-50 hover:border-rose-200 shadow-sm"
+                                }`}
+                        >
+                            {isProcessing ? "যাচাই করা হচ্ছে..." : "ওটিপি যাচাই করুন"}
+                        </button>
+                    </div>
 
-                    {/* Resend OTP Section: Supporting Orange (#FF9F4B) */}
-                    <p className="mt-8 text-sm text-gray-500">
-                        কোড পাননি? <button type="button" className="text-[#FF9F4B] font-bold hover:underline">আবার পাঠান</button>
-                    </p>
-
-                    {/* Submit Button: Primary Blue (#4169E1) ও Hover-এ Teal (#008B9C) */}
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="mt-6 w-full rounded-2xl bg-[#4169E1] py-4 text-lg font-bold text-white shadow-xl shadow-blue-100 transition-all hover:bg-[#008B9C] active:scale-95 disabled:opacity-60"
-                    >
-                        {loading ? "যাচাই করা হচ্ছে..." : "যাচাই করুন এবং এগিয়ে যান"}
-                    </button>
+                    <div className="mt-10">
+                        <button
+                            type="button"
+                            className="text-[15px] font-medium text-rose-300 hover:text-rose-400 transition-colors"
+                        >
+                            পুনরায় ওটিপি পাঠান
+                            <span className="ml-1 text-rose-300">(60 সেকেন্ড)</span>
+                        </button>
+                    </div>
                 </form>
 
-                {/* Cancel/Back Button: Neutral Gray style */}
-                <button
-                    onClick={() => window.history.back()}
-                    className="mt-6 text-gray-400 font-medium text-sm hover:text-[#D62C49] transition-colors"
-                >
-                    নম্বর পরিবর্তন করুন
-                </button>
             </div>
         </div>
     );

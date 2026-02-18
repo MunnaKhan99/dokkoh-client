@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { FaPhoneAlt, FaChevronDown } from "react-icons/fa";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import auth from "../../firebase.config";
+import Swal from "sweetalert2";
 
 const PhoneLogin = () => {
     const navigate = useNavigate();
@@ -13,7 +14,12 @@ const PhoneLogin = () => {
         e.preventDefault();
 
         if (!phoneNumber || phoneNumber.length < 10) {
-            alert("সঠিক মোবাইল নম্বর দিন");
+            Swal.fire({
+                icon: "warning",
+                title: "ভুল নম্বর!",
+                text: "দয়া করে সঠিক মোবাইল নম্বর প্রদান করুন।",
+                confirmButtonColor: "#f43f5e",
+            });
             return;
         }
 
@@ -43,87 +49,99 @@ const PhoneLogin = () => {
 
             // ✅ Save globally for VerifyOtp page
             window.confirmationResult = confirmationResult;
-
+            Swal.fire({
+                icon: "success",
+                title: "ওটিপি পাঠানো হয়েছে",
+                text: "আপনার ফোনে যাচাইকরণ কোডটি চেক করুন।",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                position: 'top-end'
+            });
             // ✅ Navigate ONLY on success
             navigate("/dokkho/verify-otp");
         } catch (error) {
-            console.error("OTP Send Error:", error);
-            alert(error.message || "OTP পাঠানো যায়নি");
+            Swal.fire({
+                icon: "error",
+                title: "ওটিপি পাঠানো যায়নি",
+                text: "আবার চেষ্টা করুন অথবা সাপোর্ট সেন্টারে কথা বলুন।",
+                confirmButtonColor: "#f43f5e",
+            });
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex min-h-screen w-full flex-col items-center justify-center bg-white px-6">
-            <div className="w-full max-w-md text-center">
+        <div className="flex min-h-screen w-full items-center justify-center bg-white md:bg-gray-50 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-[400px] bg-white md:p-8 md:shadow-lg md:rounded-3xl">
 
-                {/* Icon Container: Primary Blue ব্যবহার করা হয়েছে */}
-                <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-[#4169E1] shadow-lg shadow-blue-200 transform -rotate-6">
-                    <FaPhoneAlt size={35} className="text-white rotate-12" />
+                {/* Header Section */}
+                <div className="text-center mb-10 mt-10 md:mt-0">
+                    <h2 className="text-[28px] font-bold text-[#1A1A1A] mb-3">
+                        শুরু করা যাক!
+                    </h2>
+                    <p className="text-gray-500 text-[15px] leading-6 px-4">
+                        আপনার ফোন নম্বর লিখুন। আমরা সেখানে একটি যাচাইকরণ কোড পাঠাব।
+                    </p>
                 </div>
 
-                {/* Title: Neutral Dark (#2C2B2B) ব্যবহার করা হয়েছে */}
-                <h2 className="text-3xl font-extrabold text-[#2C2B2B] md:text-4xl">
-                    দক্ষ-তে <span className="text-[#4169E1]">স্বাগতম</span>
-                </h2>
-                <p className="mt-3 text-gray-500 font-medium">
-                    এগিয়ে যেতে আপনার মোবাইল নম্বরটি লিখুন
-                </p>
+                {/* Form Section */}
+                <form onSubmit={handleSendOtp} className="space-y-6">
 
-                {/* Form */}
-                <form onSubmit={handleSendOtp} className="mt-10">
-                    <div className="flex gap-3">
-                        {/* Country code: Neutral Palette এর হালকা শেড */}
-                        <div className="flex items-center gap-2 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 py-4 shadow-sm">
-                            <span className="text-gray-500 font-bold text-sm">BD</span>
-                            <span className="text-[#2C2B2B] font-bold">+880</span>
-                            <FaChevronDown size={12} className="text-gray-400" />
+                    {/* Input Group */}
+                    <div className="flex items-center gap-3">
+                        {/* Country Code Selector */}
+                        <div className="flex items-center justify-between gap-2 rounded-xl border border-gray-200 px-3 py-3.5 w-[110px] bg-white cursor-pointer hover:border-gray-300 transition-colors">
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg leading-none">🇧🇩</span>
+                                <span className="text-gray-700 font-medium text-[15px]">+880</span>
+                            </div>
+                            <FaChevronDown className="text-xs text-gray-400" />
                         </div>
 
-                        {/* Phone input: Focus করলে Primary Blue (#4169E1) হবে */}
-                        <input
-                            type="tel"
-                            placeholder="1712345678"
-                            className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 px-5 py-4 text-lg font-semibold tracking-[0.2em] outline-none focus:border-[#4169E1] focus:bg-white transition-all shadow-sm text-[#2C2B2B]"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                        />
+                        {/* Phone Number Input */}
+                        <div className="flex-1">
+                            <input
+                                type="tel"
+                                placeholder="ফোন নম্বর"
+                                className="w-full rounded-xl border border-gray-200 px-4 py-3.5 text-gray-800 placeholder-gray-400 outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all text-[15px]"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
-                        <p className="text-red-700 text-2xl">টেস্ট এর জন্য নম্বরঃ 1234567890</p>
 
-
-                    {/* Info Text: Supporting Teal (#008B9C) এর একটি হালকা ভাব রাখা হয়েছে */}
-                    <p className="mt-6 text-sm  text-gray-400">
-                        আপনার নম্বরটি যাচাই করতে আমরা একটি <span className="text-[#008B9C] font-semibold">ওটিপি (OTP)</span> পাঠাব
-                    </p>
-
-                    {/* Submit Button: Primary Blue (#4169E1) এবং Hover-এ Teal (#008B9C) */}
+                    {/* Continue Button */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className="mt-8 w-full rounded-2xl bg-[#4169E1] py-4 text-lg font-bold text-white shadow-xl shadow-blue-200 transition-all hover:bg-[#008B9C] active:scale-95 disabled:opacity-60"
+                        className={`w-full rounded-xl py-3.5 text-[15px] font-semibold transition-all duration-200 active:scale-95 shadow-sm
+                        ${loading
+                                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                : "bg-white border border-rose-100 text-rose-500 hover:bg-rose-50 hover:border-rose-200 shadow-sm"
+                            }`}
                     >
-                        {loading ? (
-                            <span className="flex items-center justify-center gap-2">
-                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                                পাঠানো হচ্ছে...
-                            </span>
-                        ) : (
-                            "ওটিপি (OTP) পাঠান"
-                        )}
+                        {loading ? "অপেক্ষা করুন..." : "চালিয়ে যান"}
                     </button>
                 </form>
 
-                {/* Footer Link: Supporting Orange (#FF9F4B) ব্যবহার করা যেতে পারে */}
-                <p className="mt-10 text-sm text-gray-400">
-                    সহায়তার প্রয়োজন? <span className="text-[#FF9F4B] font-bold cursor-pointer underline">যোগাযোগ করুন</span>
-                </p>
+                {/* Footer / Login Link */}
+                <div className="mt-8 text-center">
+                    <p className="text-[14px] font-medium text-rose-500 cursor-pointer hover:underline">
+                        test number: 1234567890
+                    </p>
+                </div>
+
+                {/* Optional: Testing Number Display (Styled Subtly) */}
+                <div className="mt-8 text-center opacity-0 hover:opacity-100 transition-opacity">
+                    <p className="text-xs text-gray-300">Test: 1234567890</p>
+                </div>
             </div>
 
-            {/* ✅ Required for Firebase */}
-            <div id="recaptcha-container" className="mt-4"></div>
+            {/* Firebase Recaptcha Container */}
+            <div id="recaptcha-container"></div>
         </div>
     );
 };

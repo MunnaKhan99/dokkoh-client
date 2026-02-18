@@ -59,7 +59,8 @@ const CustomerLayout = () => {
 
         axios.patch(
             `https://dokkoh-server.vercel.app/users/${user.uid}/customer-role`,
-            { phoneNumber: user.phoneNumber }
+            { phoneNumber: user.phoneNumber },
+            { withCredentials: true }
         ).catch(err => {
             console.error("Ensure customer role failed", err);
         });

@@ -43,9 +43,9 @@ const router = createBrowserRouter([
                     </PrivateRoute>
                 ),
                 children: [
-                    { path: "dashboard", element: <CustomerDashboard /> },
-                    { path: "profile", element: <CustomerProfile /> },
-                    { path: "services/:serviceKey", element: <ServiceList /> },
+                    { path: "dashboard", element: <PrivateRoute><CustomerDashboard /></PrivateRoute> },
+                    { path: "profile", element: <PrivateRoute><CustomerProfile /> </PrivateRoute> },
+                    { path: "services/:serviceKey", element: <PrivateRoute><ServiceList /></PrivateRoute> },
                 ],
             },
 
@@ -58,9 +58,9 @@ const router = createBrowserRouter([
                     </PrivateRoute>
                 ),
                 children: [
-                    { path: "onboarding", element: <ProviderOnboarding /> },
-                    { path: "dashboard", element: <ProviderDashboard /> },
-                    { path: "profile", element: <ProviderProfile /> },
+                    { path: "onboarding", element: <PrivateRoute><ProviderOnboarding /></PrivateRoute> },
+                    { path: "dashboard", element: <PrivateRoute><ProviderDashboard /></PrivateRoute> },
+                    { path: "profile", element: <PrivateRoute><ProviderProfile /></PrivateRoute> },
                 ],
             },
 

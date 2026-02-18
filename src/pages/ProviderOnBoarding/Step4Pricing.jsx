@@ -26,9 +26,9 @@ const Step4Pricing = ({ providerData, setProviderData, onPrev, onNext }) => {
     };
 
     return (
-        <div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h2 className="text-xl font-bold text-slate-800 mb-1">
-                আপনার অভিজ্ঞতা, পারিশ্রমিক ও সময়সূচী যোগ করুন
+                আপনার অভিজ্ঞতা ও শর্তাবলী
             </h2>
             <p className="text-slate-400 text-sm mb-6">
                 গ্রাহকদের জন্য আপনার কাজের শর্তাবলী সেট করুন
@@ -51,22 +51,18 @@ const Step4Pricing = ({ providerData, setProviderData, onPrev, onNext }) => {
                                 experience: e.target.value,
                             }))
                         }
-                        className="w-1/2 border border-slate-200 rounded-xl p-3 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none"
+                        className="w-1/2 border border-slate-200 rounded-xl p-3 focus:ring-4 focus:ring-rose-50 focus:border-rose-400 outline-none transition-all"
                     />
-                    <select
-                        value="বছর"
-                        disabled
-                        className="w-1/2 border border-slate-200 rounded-xl p-3 bg-slate-50 text-slate-500"
-                    >
-                        <option>বছর</option>
-                    </select>
+                    <div className="w-1/2 border border-slate-200 rounded-xl p-3 bg-slate-50 text-slate-500 flex items-center justify-center font-medium">
+                        বছর
+                    </div>
                 </div>
             </div>
 
             {/* Pricing */}
             <div className="mb-5">
                 <label className="block text-sm font-semibold text-slate-600 mb-2">
-                    সার্ভিস প্রতি মূল্য
+                    সার্ভিস প্রতি মূল্য (টাকা)
                 </label>
                 <div className="flex gap-2">
                     <input
@@ -80,7 +76,7 @@ const Step4Pricing = ({ providerData, setProviderData, onPrev, onNext }) => {
                                 pricing: { ...prev.pricing, amount: e.target.value },
                             }))
                         }
-                        className="w-1/2 border border-slate-200 rounded-xl p-3 focus:ring-4 focus:ring-emerald-50 focus:border-emerald-500 outline-none"
+                        className="w-1/2 border border-slate-200 rounded-xl p-3 focus:ring-4 focus:ring-rose-50 focus:border-rose-400 outline-none transition-all"
                     />
                     <select
                         value={pricing.unit}
@@ -90,9 +86,9 @@ const Step4Pricing = ({ providerData, setProviderData, onPrev, onNext }) => {
                                 pricing: { ...prev.pricing, unit: e.target.value },
                             }))
                         }
-                        className="w-1/2 border border-slate-200 rounded-xl p-3"
+                        className="w-1/2 border border-slate-200 rounded-xl p-3 focus:ring-4 focus:ring-rose-50 focus:border-rose-400 outline-none bg-white transition-all text-slate-700"
                     >
-                        <option value="hour">ঘন্টা প্রতি</option>
+                        <option value="hour">ঘণ্টা প্রতি</option>
                         <option value="job">প্রজেক্ট প্রতি</option>
                     </select>
                 </div>
@@ -103,36 +99,39 @@ const Step4Pricing = ({ providerData, setProviderData, onPrev, onNext }) => {
                 <label className="block text-sm font-semibold text-slate-600 mb-2">
                     সাপ্তাহিক টাইমিং
                 </label>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                     {DAYS.map((day) => (
                         <select
                             key={day.key}
                             value={availability[day.key] || ""}
                             onChange={(e) => toggleDay(day.key, e.target.value)}
-                            className="w-full border border-slate-200 rounded-xl p-3"
+                            className={`w-full border rounded-xl p-3 transition-all outline-none ${availability[day.key] === "available"
+                                    ? "border-rose-200 bg-rose-50/50 text-rose-700"
+                                    : "border-slate-100 bg-white text-slate-600"
+                                }`}
                         >
                             <option value="">{day.label}</option>
-                            <option value="available">উপলব্ধ</option>
-                            <option value="unavailable">অনুপলব্ধ</option>
+                            <option value="available">উপলব্ধ (Available)</option>
+                            <option value="unavailable">অনুপলব্ধ (Off)</option>
                         </select>
                     ))}
                 </div>
             </div>
 
-            {/* Navigation */}
+            {/* Navigation Buttons */}
             <div className="flex gap-3">
                 <button
                     onClick={onPrev}
-                    className="flex-1 py-4 border-2 border-slate-200 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all"
+                    className="flex-1 py-4 border-2 border-slate-200 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all active:scale-95"
                 >
-                    পূর্ববর্তী
+                    পেছনে
                 </button>
                 <button
                     onClick={onNext}
-                    disabled={!providerData.experience || !providerData.pricing?.amount}
-                    className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-emerald-100"
+                    disabled={!experience || !pricing.amount}
+                    className="flex-1 py-4 bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white font-bold rounded-2xl transition-all shadow-lg shadow-rose-100 active:scale-95"
                 >
-                    পরবর্তী
+                    এগিয়ে যান
                 </button>
             </div>
         </div>

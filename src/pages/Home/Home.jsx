@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import logo from '../../assets/logo.png';
-
+import { FaTools } from 'react-icons/fa';
 const Home = () => {
     const navigate = useNavigate();
 
@@ -15,35 +14,29 @@ const Home = () => {
 
     return (
         // Full screen container with Primary Color background
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#4169E1] transition-all duration-500">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-white transition-all duration-500 relative">
 
-            {/* Logo Wrapper: Responsive sizing */}
-            <div className="flex flex-col items-center animate-fade-in-up">
-                <div className="bg-[#f3f3f3] p-1 rounded-3xl shadow-2xl mb-6 transform transition-transform hover:scale-105">
-                    <img
-                        src={logo}
-                        alt="Dokkho Logo"
-                        className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain"
-                    />
+            {/* Center Content */}
+            <div className="flex flex-col items-center text-center">
+
+                {/* Icon Wrapper */}
+                <div className="bg-[#E11D48] p-4 rounded-2xl mb-6 shadow-md">
+                    <FaTools className="text-white w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14" />
                 </div>
 
-                {/* Slogan with Supporting Color Accent */}
-                <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-bold text-center px-4 tracking-wide">
-                    স্থানীয় সেবা, <span className="text-[#FF9F4B]">আস্থার হাত</span>
-                </h1>
+                {/* Bangla Text */}
+                <p className="text-gray-700 text-sm md:text-base lg:text-lg font-medium max-w-[220px] leading-relaxed">
+                    আপনার স্থানীয় সেবাদাতা আপনার হাতের মুঠোয়
+                </p>
 
-                {/* Loading Indicator using Supporting Blue/Teal */}
-                <div className="mt-8 flex gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#008B9C] animate-bounce"></div>
-                    <div className="w-2 h-2 rounded-full bg-[#008B9C] animate-bounce [animation-delay:-.3s]"></div>
-                    <div className="w-2 h-2 rounded-full bg-[#008B9C] animate-bounce [animation-delay:-.5s]"></div>
+                {/* Loading Dots (2 sec until redirect) */}
+                <div className="mt-4 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+                    <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse [animation-delay:.2s]"></span>
+                    <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse [animation-delay:.4s]"></span>
                 </div>
             </div>
 
-            {/* Footer Branding using Neutral Color */}
-            <div className="absolute bottom-10 text-white/70 text-sm font-medium">
-                © 2026 Dokkho. All Rights Reserved.
-            </div>
         </div>
     );
 };

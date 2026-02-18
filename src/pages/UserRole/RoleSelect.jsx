@@ -70,7 +70,7 @@ const RoleSelect = () => {
                                 <FiSearch size={40} />
                             </div>
                             <h3 className="text-2xl font-bold">আমার সেবা প্রয়োজন</h3>
-                            <p className="mt-3 text-sm text-gray-500">
+                            <p className="mt-3 text-sm text-[#086e6e]">
                                 আপনার আশেপাশে সেবাদাতা খুঁজুন
                             </p>
                         </div>
@@ -82,11 +82,11 @@ const RoleSelect = () => {
                         className="group w-full md:w-80 cursor-pointer rounded-3xl bg-white p-8 shadow-sm hover:shadow-xl transition"
                     >
                         <div className="flex flex-col items-center">
-                            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-[#FF9F4B]/10 text-[#FF9F4B]">
+                            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-[#FF9F4B]/10 text-[#ff664b]">
                                 <HiOutlineBriefcase size={40} />
                             </div>
                             <h3 className="text-2xl font-bold">আমি সেবা প্রদান করি</h3>
-                            <p className="mt-3 text-sm text-gray-500">
+                            <p className="mt-3 text-sm text-red-500">
                                 আপনার দক্ষতা দিয়ে আয় করুন
                             </p>
                         </div>
