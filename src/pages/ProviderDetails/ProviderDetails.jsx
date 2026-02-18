@@ -22,7 +22,7 @@ const ProviderDetails = () => {
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        axios.get(`https://dokkoh-server.vercel.app/providers/${providerId}`)
+        axios.get(`http://localhost:3000/providers/${providerId}`)
             .then((res) => {
                 setProvider(res.data);
                 setLoading(false);
@@ -32,7 +32,7 @@ const ProviderDetails = () => {
 
     useEffect(() => {
         if (!providerId) return;
-        axios.get(`https://dokkoh-server.vercel.app/reviews/provider/${providerId}?limit=3`)
+        axios.get(`http://localhost:3000/reviews/provider/${providerId}?limit=3`)
             .then(res => setReviews(res.data))
             .catch(() => { });
     }, [providerId]);
@@ -45,7 +45,7 @@ const ProviderDetails = () => {
 
         try {
             const res = await axios.post(
-                "https://dokkoh-server.vercel.app/reviews",
+                "http://localhost:3000/reviews",
                 { providerId, rating: userRating, comment },
                 { withCredentials: true }
             );
