@@ -52,7 +52,25 @@ const CustomerLayout = () => {
             setProvidersLoading(false);
         }
     };
+    const [profile, setProfile] = useState(null);
 
+    const fetchProfile = async () => {
+        try {
+            const res = await axios.get("https://dokkoh-server.vercel.app/users/me", {
+                withCredentials: true
+            });
+            setProfile(res.data);
+        } catch (err) {
+            console.error("Fetch profile failed", err);
+            setProfile(null);
+        }
+    };
+
+    useEffect(() => {
+        if (user?.uid) {
+            fetchProfile();
+        }
+    }, [user]);
     /* ================= ENSURE CUSTOMER ROLE ================= */
     useEffect(() => {
         if (!user?.uid) return;
@@ -74,6 +92,8 @@ const CustomerLayout = () => {
                 providers,
                 providersLoading,
                 fetchProviders,
+                profile,          // ✅ add
+                refetchProfile: fetchProfile
             }}
         >
             <div className={!shouldHideBottomNav ? "pb-20" : ""}>

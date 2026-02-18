@@ -1,96 +1,159 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import {
-    FaPhoneAlt,
-    FaBriefcase,
-    FaSignOutAlt,
     FaArrowLeft,
-    FaUserCircle,
+    FaRegUser,
+    FaPhoneAlt,
+    FaSignOutAlt,
+    FaArrowRight
 } from "react-icons/fa";
 import { AuthContext } from "../../Layout/RootLayout";
+import { CustomerContext } from "../../Layout/CustomerLayout";
+import axios from "axios";
 
 const CustomerProfile = () => {
-    const { role, user, loading, logout } = useContext(AuthContext);
+    const { user, loading, logout } = useContext(AuthContext);
+    const { profile } = useContext(CustomerContext);
     const navigate = useNavigate();
+    const [switching, setSwitching] = useState(false);
+    const [error, setError] = useState(null);
 
-    if (loading) return (
-        <div className="flex h-screen items-center justify-center bg-white">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#4169E1] border-t-transparent"></div>
-        </div>
-    );
+    const profileImage =
+        profile?.profileImage || "https://i.pravatar.cc/150?img=11";
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+        } catch (err) {
+            console.error("Logout failed", err);
+        }
+    };
+
+    const handleSwitchToProvider = async () => {
+        if (!user?.uid || switching) return;
+
+        try {
+            setSwitching(true);
+            setError(null);
+
+            const res = await axios.get(
+                `https://dokkoh-server.vercel.app/providers/by-uid/${user.uid}`,
+                { withCredentials: true }
+            );
+
+            if (res?.data?.exists) {
+                navigate("/dokkho/provider/dashboard");
+            } else {
+                navigate("/dokkho/provider/onboarding");
+            }
+        } catch (err) {
+            console.error("Provider check failed", err);
+            setError("প্রোভাইডার স্ট্যাটাস চেক করা যায়নি। আবার চেষ্টা করুন।");
+        } finally {
+            setSwitching(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-white">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#4169E1] border-t-transparent"></div>
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC]">
-            {/* Header: Primary Blue (#4169E1) */}
-            <div className="bg-[#4169E1] pt-8 pb-24 px-6 md:px-12 text-white flex items-center gap-4 rounded-b-[40px] shadow-lg">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="p-2 hover:bg-white/20 rounded-full transition-colors"
-                >
-                    <FaArrowLeft size={20} />
-                </button>
-                <h1 className="text-xl md:text-2xl font-bold">আমার প্রোফাইল</h1>
+        <div className="min-h-screen bg-[#F8F9FA] text-gray-800 font-sans">
+            {/* Header */}
+            <div className="bg-white sticky top-0 z-40">
+                <div className="max-w-md mx-auto px-4 h-16 flex items-center relative border-b border-gray-100">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="absolute left-4 text-gray-600 p-1 hover:bg-gray-50 rounded-full transition"
+                        aria-label="Back"
+                    >
+                        <FaArrowLeft size={18} />
+                    </button>
+                    <h1 className="w-full text-center text-lg font-bold text-gray-800">
+                        গ্রাহক প্রোফাইল
+                    </h1>
+                </div>
             </div>
 
-            {/* Profile Content */}
-            <div className="max-w-2xl mx-auto px-6 -mt-16 pb-12">
+            {/* Main Content */}
+            <div className="max-w-md mx-auto px-4 py-6 space-y-5">
 
-                {/* User Card */}
-                <div className="bg-white rounded-3xl p-8 text-center shadow-xl shadow-blue-900/5 border border-gray-100">
-                    <div className="mx-auto w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-4 border-4 border-white shadow-md text-[#4169E1]">
-                        <FaUserCircle size={80} />
-                    </div>
-                    <h2 className="text-2xl font-extrabold text-[#2C2B2B]">{user?.phoneNumber || "ব্যবহারকারী"}</h2>
-                    <div className="mt-2 inline-block px-4 py-1 bg-[#008B9C]/10 text-[#008B9C] rounded-full text-sm font-bold capitalize">
-                        {role === 'customer' ? 'গ্রাহক' : role}
+                {/* Profile Info */}
+                <div className="bg-white rounded-2xl p-5 shadow flex items-center gap-4">
+                    <img
+                        src={profileImage}
+                        alt="Profile"
+                        className="w-16 h-16 rounded-full object-cover border"
+                    />
+                    <div>
+                        <h2 className="text-lg font-bold">
+                            {profile?.name || "নাম সেট করা নেই"}
+                        </h2>
+                        <p className="text-gray-500 text-sm">
+                            {profile?.phoneNumber || user?.phoneNumber || "মোবাইল নম্বর নেই"}
+                        </p>
                     </div>
                 </div>
 
-                {/* Info List */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Info
-                        label="ফোন নম্বর"
-                        value={user?.phoneNumber}
-                        icon={<FaPhoneAlt />}
-                        iconBg="bg-[#4169E1]/10"
-                        iconColor="text-[#4169E1]"
-                    />
-                    <Info
-                        label="অ্যাকাউন্ট টাইপ"
-                        value={role === 'customer' ? 'গ্রাহক' : 'প্রোভাইডার'}
-                        icon={<FaBriefcase />}
-                        iconBg="bg-[#FF9F4B]/10"
-                        iconColor="text-[#FF9F4B]"
-                    />
+                {/* Readonly Fields */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-2 ml-1">নাম</label>
+                    <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5 flex items-center gap-3 shadow-sm">
+                        <FaRegUser className="text-gray-400" size={16} />
+                        <input
+                            readOnly
+                            type="text"
+                            value={profile?.name || "নাম সেট করা নেই"}
+                            className="flex-1 bg-transparent outline-none text-[15px]"
+                        />
+                    </div>
                 </div>
 
-                {/* Logout Button: Palette Red (#D62C49) */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-600 mb-2 ml-1">ফোন নম্বর</label>
+                    <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5 flex items-center gap-3 shadow-sm">
+                        <FaPhoneAlt className="text-gray-400 rotate-90" size={16} />
+                        <input
+                            readOnly
+                            type="text"
+                            value={profile?.phoneNumber || user?.phoneNumber || "মোবাইল নম্বর নেই"}
+                            className="flex-1 bg-transparent outline-none text-[15px]"
+                        />
+                    </div>
+                </div>
+
+                {/* Error */}
+                {error && (
+                    <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                        {error}
+                    </div>
+                )}
+
+                {/* Switch Button */}
                 <button
-                    onClick={logout}
-                    className="w-full mt-12 py-4 border-2 border-[#D62C49] text-[#D62C49] rounded-2xl font-bold flex justify-center items-center gap-3 hover:bg-[#D62C49] hover:text-white transition-all duration-300 active:scale-95 shadow-lg shadow-red-100"
+                    onClick={handleSwitchToProvider}
+                    disabled={switching}
+                    className="w-full bg-white border border-blue-600 text-blue-600 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-50 transition shadow-sm disabled:opacity-60"
                 >
-                    <FaSignOutAlt /> লগআউট করুন
+                    {switching ? "চেক করা হচ্ছে..." : "প্রোভাইডার মোডে যান"}
+                    <FaArrowRight size={16} />
                 </button>
 
-                {/* Footer Version */}
-                <p className="text-center mt-10 text-gray-300 text-xs font-medium uppercase tracking-widest">
-                    Dokkho App Version 1.0.2
-                </p>
+                {/* Logout */}
+                <button
+                    onClick={handleLogout}
+                    className="w-full bg-white border border-red-500 text-red-500 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-red-50 transition shadow-sm"
+                >
+                    লগআউট করুন <FaSignOutAlt size={16} />
+                </button>
             </div>
         </div>
     );
 };
-
-const Info = ({ icon, label, value, iconBg, iconColor }) => (
-    <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex gap-5 items-center hover:shadow-md transition-shadow">
-        <div className={`${iconBg} ${iconColor} p-4 rounded-2xl text-xl`}>
-            {icon}
-        </div>
-        <div>
-            <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">{label}</p>
-            <p className="font-bold text-[#2C2B2B] text-lg">{value || "তথ্য নেই"}</p>
-        </div>
-    </div>
-);
 
 export default CustomerProfile;
