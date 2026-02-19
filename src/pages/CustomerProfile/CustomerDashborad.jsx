@@ -340,10 +340,21 @@ const CustomerDashboard = () => {
                     <div className="lg:col-span-2">
                         <h2 className="text-xl font-black text-gray-800 mb-6">জনপ্রিয় সেবা</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <FeaturedCard title="জরুরী বিদ্যুৎ মেরামত" img="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=600" desc="অভিজ্ঞ ইলেকট্রিশিয়ান পান ১০ মিনিটে" />
-                            <FeaturedCard title="বাসা বদল সার্ভিস" img="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600" desc="নিরাপদ এবং দ্রুত শিফটিং সুবিধা" />
-                            <FeaturedCard title="প্লাম্বিং সলিউশন" img="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=600" desc="পাইপ লিক বা নতুন ফিটিং এর জন্য" />
-                            <FeaturedCard title="রঙের কাজ" img="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=600" desc="আপনার ঘরকে দিন নতুন রূপ" />
+                            <FeaturedCard
+                                title="জরুরী বিদ্যুৎ মেরামত"
+                                img="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=600"
+                                desc="অভিজ্ঞ ইলেকট্রিশিয়ান পান ১০ মিনিটে"
+                            />
+                            <FeaturedCard
+                                title="প্লাম্বিং সলিউশন"
+                                img="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=600"
+                                desc="পাইপ লিক বা নতুন ফিটিং এর জন্য"
+                            />
+                            <FeaturedCard
+                                title="হোম টিউটর"
+                                img="https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=600"
+                                desc="অভিজ্ঞ শিক্ষক পান আপনার বাড়িতে"
+                            />
                         </div>
                     </div>
 
@@ -352,12 +363,7 @@ const CustomerDashboard = () => {
                     <div className="lg:col-span-1">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-black text-gray-800">নিকটস্থ দক্ষ জন</h2>
-                            <span
-                                className="text-[#008080] text-xs font-bold cursor-pointer hover:underline"
-                                onClick={() => navigate('/dokkho/customer/providers')}
-                            >
-                                সবগুলো
-                            </span>
+
                         </div>
 
                         <div className="space-y-4">
