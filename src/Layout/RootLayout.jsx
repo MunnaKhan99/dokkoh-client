@@ -28,7 +28,7 @@ const RootLayout = () => {
                 try {
                     const firebaseToken = await currentUser.getIdToken();
                     await axios.post(
-                        "https://dokkoh-server.vercel.app/jwt",
+                        "http://localhost:3000/jwt",
                         {},
                         {
                             headers: { Authorization: `Bearer ${firebaseToken}` },
@@ -46,7 +46,7 @@ const RootLayout = () => {
                 }
             } else {
                 try {
-                    await axios.post("https://dokkoh-server.vercel.app/logout", {}, { withCredentials: true });
+                    await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
                 } catch (err) {
                     console.error("Logout failed", err);
                 }
@@ -71,7 +71,7 @@ const RootLayout = () => {
 
         if (result.isConfirmed) {
             await signOut(auth);
-            await axios.post(`https://dokkoh-server.vercel.app/logout`);
+            await axios.post(`http://localhost:3000/logout`);
             setUser(null);
             setRole(null);
 
