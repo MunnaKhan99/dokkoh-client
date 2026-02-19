@@ -99,7 +99,7 @@ const ProviderProfile = () => {
                     onClick={async () => {
                         setSwitching(true);
                         await axios.patch(
-                            `http://localhost:3000/users/${user.uid}/customer-role`,
+                            `https://dokkohserver.vercel.app/users/${user.uid}/customer-role`,
                             { phoneNumber: user.phoneNumber },
                             { withCredentials: true }
                         );

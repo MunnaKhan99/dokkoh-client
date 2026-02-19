@@ -221,7 +221,7 @@ const CustomerDashboard = () => {
                 setNearbyLoading(true);
 
                 const response = await axios.get(
-                    `http://localhost:3000/providers/nearby?locationParent=${customerParentArea}`,
+                    `https://dokkohserver.vercel.app/providers/nearby?locationParent=${customerParentArea}`,
                     { withCredentials: true }
                 );
 
