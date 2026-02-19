@@ -37,7 +37,7 @@ const CustomerProfile = () => {
             setError(null);
 
             const res = await axios.get(
-                `https://dokkohserver.vercel.app/providers/by-uid/${user.uid}`,
+                `https://dokkoh-server.vercel.app/providers/by-uid/${user.uid}`,
                 { withCredentials: true }
             );
 

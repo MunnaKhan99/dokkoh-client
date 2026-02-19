@@ -38,7 +38,7 @@ const CustomerLayout = () => {
     const fetchProviders = async ({ serviceKey, locationParent } = {}) => {
         setProvidersLoading(true);
         try {
-            const res = await axios.get("https://dokkohserver.vercel.app/providers", {
+            const res = await axios.get("https://dokkoh-server.vercel.app/providers", {
                 params: {
                     service: serviceKey || undefined,
                     locationParent: locationParent || undefined,
@@ -56,7 +56,7 @@ const CustomerLayout = () => {
 
     const fetchProfile = async () => {
         try {
-            const res = await axios.get(`https://dokkohserver.vercel.app/users/me`, {
+            const res = await axios.get(`https://dokkoh-server.vercel.app/users/me`, {
                 withCredentials: true
             });
             setProfile(res.data);
@@ -76,7 +76,7 @@ const CustomerLayout = () => {
         if (!user?.uid) return;
 
         axios.patch(
-            `https://dokkohserver.vercel.app/users/${user.uid}/customer-role`,
+            `https://dokkoh-server.vercel.app/users/${user.uid}/customer-role`,
             { phoneNumber: user.phoneNumber },
             { withCredentials: true }
         ).catch(err => {
