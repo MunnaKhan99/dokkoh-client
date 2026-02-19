@@ -15,10 +15,12 @@ import ProviderProfile from "../pages/ProviderProfile/ProviderProfile";
 import ProviderDetails from "../pages/ProviderDetails/ProviderDetails";
 import RootLayout from "../Layout/RootLayout";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import ErrorPage from "../components/ErrorPage/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
+        errorElement: <ErrorPage />,
         element: <RootLayout />,
         children: [
             { path: "/", element: <Home /> },
@@ -72,6 +74,10 @@ const router = createBrowserRouter([
                         <ProviderDetails />
                     </PrivateRoute>
                 ),
+            },
+            {
+                path: "*",
+                element: <ErrorPage />,
             },
         ],
     },
