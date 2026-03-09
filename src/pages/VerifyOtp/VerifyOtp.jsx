@@ -123,7 +123,7 @@ const VerifyOtp = () => {
                     </div>
                     <div className="mt-8 text-center">
                         <p className="text-[14px] font-medium text-rose-500 cursor-pointer ">
-                            Test Number: 1234567890
+                            Test OTP: 123456
                         </p>
                     </div>
                     <div className="mt-10">
