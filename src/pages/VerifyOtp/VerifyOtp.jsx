@@ -19,11 +19,21 @@ const VerifyOtp = () => {
 
         const newOtp = [...otp];
         newOtp[index] = value.substring(value.length - 1);
+
         setOtp(newOtp);
 
-        // পরের বক্সে ফোকাস
+        // next input focus
         if (value && index < 5) {
             inputRefs.current[index + 1].focus();
+        }
+
+        // check if all 6 digits filled
+        const otpString = newOtp.join("");
+
+        if (!newOtp.includes("") && otpString.length === 6) {
+            setTimeout(() => {
+                handleVerify(null, otpString);
+            }, 100);
         }
     };
 
@@ -33,17 +43,39 @@ const VerifyOtp = () => {
             inputRefs.current[index - 1].focus();
         }
     };
-
-    const handleVerify = async (e) => {
+    const handlePaste = (e) => {
         e.preventDefault();
-        const finalOtp = otp.join("");
+
+        const pasteData = e.clipboardData.getData("text").trim();
+
+        if (!/^\d{6}$/.test(pasteData)) return;
+
+        const pasteArray = pasteData.split("");
+        const newOtp = [...otp];
+
+        pasteArray.forEach((num, index) => {
+            newOtp[index] = num;
+        });
+
+        setOtp(newOtp);
+
+        // auto verify
+        setTimeout(() => {
+            handleVerify(null, pasteData);
+        }, 100);
+    };
+
+    const handleVerify = async (e, otpValue = null) => {
+        if (e) e.preventDefault();
+
+        const finalOtp = otpValue ? otpValue : otp.join("");
 
         if (finalOtp.length !== 6) {
             Swal.fire({
                 icon: "warning",
                 title: "অসম্পূর্ণ ওটিপি",
                 text: "দয়া করে ৬ সংখ্যার সঠিক কোডটি দিন",
-                confirmButtonColor: "#fb7185", // rose-400
+                confirmButtonColor: "#fb7185",
             });
             return;
         }
@@ -51,11 +83,9 @@ const VerifyOtp = () => {
         try {
             setIsProcessing(true);
 
-            // Firebase Verification
             const result = await window.confirmationResult.confirm(finalOtp);
             setUser(result.user);
 
-            // সফল হলে এলার্ট দেখাবে
             await Swal.fire({
                 icon: "success",
                 title: "সফল যাচাইকরণ!",
@@ -64,11 +94,9 @@ const VerifyOtp = () => {
                 showConfirmButton: false
             });
 
-            // এলার্ট শেষ হওয়ার পর নেভিগেট
             navigate("/dokkho/role");
 
         } catch (error) {
-            console.error("OTP Verify Error:", error);
             Swal.fire({
                 icon: "error",
                 title: "ভুল ওটিপি!",
@@ -103,6 +131,7 @@ const VerifyOtp = () => {
                                 value={value}
                                 onChange={(e) => handleChange(e.target, index)}
                                 onKeyDown={(e) => handleKeyDown(e, index)}
+                                onPaste={handlePaste}
                                 className="h-12 w-10 sm:h-14 sm:w-12 rounded-xl border border-gray-200 bg-white text-center text-xl font-semibold text-gray-800 focus:border-rose-400 focus:ring-1 focus:ring-rose-400 focus:outline-none transition-all"
                             />
                         ))}
