@@ -121,7 +121,11 @@ const VerifyOtp = () => {
                             {isProcessing ? "যাচাই করা হচ্ছে..." : "ওটিপি যাচাই করুন"}
                         </button>
                     </div>
-
+                    <div className="mt-8 text-center">
+                        <p className="text-[14px] font-medium text-rose-500 cursor-pointer ">
+                            Test Number: 1234567890
+                        </p>
+                    </div>
                     <div className="mt-10">
                         <button
                             type="button"
